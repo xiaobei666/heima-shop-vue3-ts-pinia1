@@ -1,36 +1,65 @@
 <template>
-	<view class="uni-popup-dialog">
-		<view class="uni-dialog-title">
-			<text class="uni-dialog-title-text" :class="['uni-popup__'+dialogType]">{{titleText}}</text>
-		</view>
-		<view v-if="mode === 'base'" class="uni-dialog-content">
-			<slot>
-				<text class="uni-dialog-content-text">{{content}}</text>
-			</slot>
-		</view>
-		<view v-else class="uni-dialog-content">
-			<slot>
-				<input class="uni-dialog-input" v-model="val" type="text" :placeholder="placeholderText" :focus="focus" >
-			</slot>
-		</view>
-		<view class="uni-dialog-button-group">
-			<view class="uni-dialog-button" @click="closeDialog">
-				<text class="uni-dialog-button-text">{{closeText}}</text>
-			</view>
-			<view class="uni-dialog-button uni-border-left" @click="onOk">
-				<text class="uni-dialog-button-text uni-button-color">{{okText}}</text>
-			</view>
-		</view>
-
-	</view>
+  <view class="uni-popup-dialog">
+    <view class="uni-dialog-title">
+      <text
+        class="uni-dialog-title-text"
+        :class="['uni-popup__'+dialogType]"
+      >
+        {{ titleText }}
+      </text>
+    </view>
+    <view
+      v-if="mode === 'base'"
+      class="uni-dialog-content"
+    >
+      <slot>
+        <text class="uni-dialog-content-text">
+          {{ content }}
+        </text>
+      </slot>
+    </view>
+    <view
+      v-else
+      class="uni-dialog-content"
+    >
+      <slot>
+        <input
+          v-model="val"
+          class="uni-dialog-input"
+          type="text"
+          :placeholder="placeholderText"
+          :focus="focus"
+        >
+      </slot>
+    </view>
+    <view class="uni-dialog-button-group">
+      <view
+        class="uni-dialog-button"
+        @click="closeDialog"
+      >
+        <text class="uni-dialog-button-text">
+          {{ closeText }}
+        </text>
+      </view>
+      <view
+        class="uni-dialog-button uni-border-left"
+        @click="onOk"
+      >
+        <text class="uni-dialog-button-text uni-button-color">
+          {{ okText }}
+        </text>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>
-	import popup from '../uni-popup/popup.js'
 	import {
 	initVueI18n
 	} from '@dcloudio/uni-i18n'
+
 	import messages from '../uni-popup/i18n/index.js'
+	import popup from '../uni-popup/popup.js'
 	const {	t } = initVueI18n(messages)
 	/**
 	 * PopUp 弹出层-对话框样式
@@ -53,9 +82,8 @@
 	 */
 
 	export default {
-		name: "uniPopupDialog",
+		name: "UniPopupDialog",
 		mixins: [popup],
-		emits:['confirm','close'],
 		props: {
 			value: {
 				type: [String, Number],
@@ -94,6 +122,7 @@
 				default: ''
 			}
 		},
+		emits:['confirm','close'],
 		data() {
 			return {
 				dialogType: 'error',
@@ -147,7 +176,7 @@
 			 * 点击确认按钮
 			 */
 			onOk() {
-				if (this.mode === 'input'){
+				if (this.mode === 'input') {
 					this.$emit('confirm', this.val)
 				}else{
 					this.$emit('confirm')
@@ -163,14 +192,14 @@
 				if(this.beforeClose) return
 				this.popup.close()
 			},
-			close(){
+			close() {
 				this.popup.close()
 			}
 		}
 	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	.uni-popup-dialog {
 		width: 300px;
 		border-radius: 11px;

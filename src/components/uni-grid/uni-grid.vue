@@ -1,14 +1,20 @@
 <template>
-	<view class="uni-grid-wrap">
-		<view :id="elId" ref="uni-grid" class="uni-grid" :class="{ 'uni-grid--border': showBorder }" :style="{ 'border-left-color':borderColor}">
-			<slot />
-		</view>
-	</view>
+  <view class="uni-grid-wrap">
+    <view
+      :id="elId"
+      ref="uni-grid"
+      class="uni-grid"
+      :class="{ 'uni-grid--border': showBorder }"
+      :style="{ 'border-left-color':borderColor}"
+    >
+      <slot />
+    </view>
+  </view>
 </template>
 
 <script>
 	// #ifdef APP-NVUE
-	const dom = uni.requireNativePlugin('dom');
+	const dom = uni.requireNativePlugin('dom')
 	// #endif
 
 	/**
@@ -24,7 +30,11 @@
 	 */
 	export default {
 		name: 'UniGrid',
-		emits:['change'],
+		provide() {
+			return {
+				grid: this
+			}
+		},
 		props: {
 			// 每列显示个数
 			column: {
@@ -51,11 +61,7 @@
 				default: true
 			}
 		},
-		provide() {
-			return {
-				grid: this
-			}
-		},
+		emits:['change'],
 		data() {
 			const elId = `Uni_${Math.ceil(Math.random() * 10e5).toString(36)}`
 			return {
@@ -67,7 +73,7 @@
 			this.children = []
 		},
 		mounted() {
-			this.$nextTick(()=>{
+			this.$nextTick(() => {
 				this.init()
 			})
 		},
@@ -106,7 +112,7 @@
 	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	.uni-grid-wrap {
 		/* #ifndef APP-NVUE */
 		display: flex;

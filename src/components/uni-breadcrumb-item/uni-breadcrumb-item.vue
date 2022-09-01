@@ -1,14 +1,26 @@
 <template>
-	<view class="uni-breadcrumb-item">
-		<view :class="{
-			'uni-breadcrumb-item--slot': true,
-			'uni-breadcrumb-item--slot-link': to && currentPage !== to.path
-			}" @click="navTo">
-			<slot />
-		</view>
-		<i v-if="separatorClass" class="uni-breadcrumb-item--separator" :class="separatorClass" />
-		<text v-else class="uni-breadcrumb-item--separator">{{ separator }}</text>
-	</view>
+  <view class="uni-breadcrumb-item">
+    <view
+      :class="{
+        'uni-breadcrumb-item--slot': true,
+        'uni-breadcrumb-item--slot-link': to && currentPage !== to.path
+      }"
+      @click="navTo"
+    >
+      <slot />
+    </view>
+    <i
+      v-if="separatorClass"
+      class="uni-breadcrumb-item--separator"
+      :class="separatorClass"
+    />
+    <text
+      v-else
+      class="uni-breadcrumb-item--separator"
+    >
+      {{ separator }}
+    </text>
+  </view>
 </template>
 <script>
 	/**
@@ -17,18 +29,18 @@
 	 * @property {Boolean} replace 在使用 to 进行路由跳转时，启用 replace 将不会向 history 添加新记录(仅 h5 支持）
 	 */
 	export default {
-		data() {
-			return {
-				currentPage: ''
-			}
-		},
+		inject: ['uniBreadcrumb'],
 		props: {
 			to: {
 				type: [String, Object],
 				default: ''
 			}
 		},
-		inject: ['uniBreadcrumb'],
+		data() {
+			return {
+				currentPage: ''
+			}
+		},
 		computed: {
 			separator() {
 				return this.uniBreadcrumb.separator

@@ -1,105 +1,223 @@
 <template>
-	<view class="uni-calendar" @mouseleave="leaveCale">
-		<view v-if="!insert&&show" class="uni-calendar__mask" :class="{'uni-calendar--mask-show':aniMaskShow}"
-			@click="clean"></view>
-		<view v-if="insert || show" class="uni-calendar__content"
-			:class="{'uni-calendar--fixed':!insert,'uni-calendar--ani-show':aniMaskShow, 'uni-calendar__content-mobile': aniMaskShow}">
-			<view class="uni-calendar__header" :class="{'uni-calendar__header-mobile' :!insert}">
-				<view v-if="left" class="uni-calendar__header-btn-box" @click.stop="pre">
-					<view class="uni-calendar__header-btn uni-calendar--left"></view>
-				</view>
-				<picker mode="date" :value="date" fields="month" @change="bindDateChange">
-					<text
-						class="uni-calendar__header-text">{{ (nowDate.year||'') + ' 年 ' + ( nowDate.month||'') +' 月'}}</text>
-				</picker>
-				<view v-if="right" class="uni-calendar__header-btn-box" @click.stop="next">
-					<view class="uni-calendar__header-btn uni-calendar--right"></view>
-				</view>
-				<view v-if="!insert" class="dialog-close" @click="clean">
-					<view class="dialog-close-plus" data-id="close"></view>
-					<view class="dialog-close-plus dialog-close-rotate" data-id="close"></view>
-				</view>
+  <view
+    class="uni-calendar"
+    @mouseleave="leaveCale"
+  >
+    <view
+      v-if="!insert&&show"
+      class="uni-calendar__mask"
+      :class="{'uni-calendar--mask-show':aniMaskShow}"
+      @click="clean"
+    />
+    <view
+      v-if="insert || show"
+      class="uni-calendar__content"
+      :class="{'uni-calendar--fixed':!insert,'uni-calendar--ani-show':aniMaskShow, 'uni-calendar__content-mobile': aniMaskShow}"
+    >
+      <view
+        class="uni-calendar__header"
+        :class="{'uni-calendar__header-mobile' :!insert}"
+      >
+        <view
+          v-if="left"
+          class="uni-calendar__header-btn-box"
+          @click.stop="pre"
+        >
+          <view class="uni-calendar__header-btn uni-calendar--left" />
+        </view>
+        <picker
+          mode="date"
+          :value="date"
+          fields="month"
+          @change="bindDateChange"
+        >
+          <text
+            class="uni-calendar__header-text"
+          >
+            {{ (nowDate.year||'') + ' 年 ' + ( nowDate.month||'') +' 月' }}
+          </text>
+        </picker>
+        <view
+          v-if="right"
+          class="uni-calendar__header-btn-box"
+          @click.stop="next"
+        >
+          <view class="uni-calendar__header-btn uni-calendar--right" />
+        </view>
+        <view
+          v-if="!insert"
+          class="dialog-close"
+          @click="clean"
+        >
+          <view
+            class="dialog-close-plus"
+            data-id="close"
+          />
+          <view
+            class="dialog-close-plus dialog-close-rotate"
+            data-id="close"
+          />
+        </view>
 
-				<!-- <text class="uni-calendar__backtoday" @click="backtoday">回到今天</text> -->
-			</view>
-			<view class="uni-calendar__box">
-				<view v-if="showMonth" class="uni-calendar__box-bg">
-					<text class="uni-calendar__box-bg-text">{{nowDate.month}}</text>
-				</view>
-				<view class="uni-calendar__weeks" style="padding-bottom: 7px;">
-					<view class="uni-calendar__weeks-day">
-						<text class="uni-calendar__weeks-day-text">{{SUNText}}</text>
-					</view>
-					<view class="uni-calendar__weeks-day">
-						<text class="uni-calendar__weeks-day-text">{{monText}}</text>
-					</view>
-					<view class="uni-calendar__weeks-day">
-						<text class="uni-calendar__weeks-day-text">{{TUEText}}</text>
-					</view>
-					<view class="uni-calendar__weeks-day">
-						<text class="uni-calendar__weeks-day-text">{{WEDText}}</text>
-					</view>
-					<view class="uni-calendar__weeks-day">
-						<text class="uni-calendar__weeks-day-text">{{THUText}}</text>
-					</view>
-					<view class="uni-calendar__weeks-day">
-						<text class="uni-calendar__weeks-day-text">{{FRIText}}</text>
-					</view>
-					<view class="uni-calendar__weeks-day">
-						<text class="uni-calendar__weeks-day-text">{{SATText}}</text>
-					</view>
-				</view>
-				<view class="uni-calendar__weeks" v-for="(item,weekIndex) in weeks" :key="weekIndex">
-					<view class="uni-calendar__weeks-item" v-for="(weeks,weeksIndex) in item" :key="weeksIndex">
-						<calendar-item class="uni-calendar-item--hook" :weeks="weeks" :calendar="calendar"
-							:selected="selected" :lunar="lunar" :checkHover="range" @change="choiceDate"
-							@handleMouse="handleMouse">
-						</calendar-item>
-					</view>
-				</view>
-			</view>
-			<view v-if="!insert && !range && typeHasTime" class="uni-date-changed uni-calendar--fixed-top"
-				style="padding: 0 80px;">
-				<view class="uni-date-changed--time-date">{{tempSingleDate ? tempSingleDate : selectDateText}}</view>
-				<time-picker type="time" :start="reactStartTime" :end="reactEndTime" v-model="time"
-					:disabled="!tempSingleDate" :border="false" :hide-second="hideSecond" class="time-picker-style">
-				</time-picker>
-			</view>
+        <!-- <text class="uni-calendar__backtoday" @click="backtoday">回到今天</text> -->
+      </view>
+      <view class="uni-calendar__box">
+        <view
+          v-if="showMonth"
+          class="uni-calendar__box-bg"
+        >
+          <text class="uni-calendar__box-bg-text">
+            {{ nowDate.month }}
+          </text>
+        </view>
+        <view
+          class="uni-calendar__weeks"
+          style="padding-bottom: 7px;"
+        >
+          <view class="uni-calendar__weeks-day">
+            <text class="uni-calendar__weeks-day-text">
+              {{ SUNText }}
+            </text>
+          </view>
+          <view class="uni-calendar__weeks-day">
+            <text class="uni-calendar__weeks-day-text">
+              {{ monText }}
+            </text>
+          </view>
+          <view class="uni-calendar__weeks-day">
+            <text class="uni-calendar__weeks-day-text">
+              {{ TUEText }}
+            </text>
+          </view>
+          <view class="uni-calendar__weeks-day">
+            <text class="uni-calendar__weeks-day-text">
+              {{ WEDText }}
+            </text>
+          </view>
+          <view class="uni-calendar__weeks-day">
+            <text class="uni-calendar__weeks-day-text">
+              {{ THUText }}
+            </text>
+          </view>
+          <view class="uni-calendar__weeks-day">
+            <text class="uni-calendar__weeks-day-text">
+              {{ FRIText }}
+            </text>
+          </view>
+          <view class="uni-calendar__weeks-day">
+            <text class="uni-calendar__weeks-day-text">
+              {{ SATText }}
+            </text>
+          </view>
+        </view>
+        <view
+          v-for="(item,weekIndex) in weeks"
+          :key="weekIndex"
+          class="uni-calendar__weeks"
+        >
+          <view
+            v-for="(weeks,weeksIndex) in item"
+            :key="weeksIndex"
+            class="uni-calendar__weeks-item"
+          >
+            <calendar-item
+              class="uni-calendar-item--hook"
+              :weeks="weeks"
+              :calendar="calendar"
+              :selected="selected"
+              :lunar="lunar"
+              :check-hover="range"
+              @change="choiceDate"
+              @handleMouse="handleMouse"
+            />
+          </view>
+        </view>
+      </view>
+      <view
+        v-if="!insert && !range && typeHasTime"
+        class="uni-date-changed uni-calendar--fixed-top"
+        style="padding: 0 80px;"
+      >
+        <view class="uni-date-changed--time-date">
+          {{ tempSingleDate ? tempSingleDate : selectDateText }}
+        </view>
+        <time-picker
+          v-model="time"
+          type="time"
+          :start="reactStartTime"
+          :end="reactEndTime"
+          :disabled="!tempSingleDate"
+          :border="false"
+          :hide-second="hideSecond"
+          class="time-picker-style"
+        />
+      </view>
 
-			<view v-if="!insert && range && typeHasTime" class="uni-date-changed uni-calendar--fixed-top">
-				<view class="uni-date-changed--time-start">
-					<view class="uni-date-changed--time-date">{{tempRange.before ? tempRange.before : startDateText}}
-					</view>
-					<time-picker type="time" :start="reactStartTime" v-model="timeRange.startTime" :border="false"
-						:hide-second="hideSecond" :disabled="!tempRange.before" class="time-picker-style">
-					</time-picker>
-				</view>
-				<uni-icons type="arrowthinright" color="#999" style="line-height: 50px;"></uni-icons>
-				<view class="uni-date-changed--time-end">
-					<view class="uni-date-changed--time-date">{{tempRange.after ? tempRange.after : endDateText}}</view>
-					<time-picker type="time" :end="reactEndTime" v-model="timeRange.endTime" :border="false"
-						:hide-second="hideSecond" :disabled="!tempRange.after" class="time-picker-style">
-					</time-picker>
-				</view>
-			</view>
-			<view v-if="!insert" class="uni-date-changed uni-date-btn--ok">
-				<!-- <view class="uni-calendar__header-btn-box">
+      <view
+        v-if="!insert && range && typeHasTime"
+        class="uni-date-changed uni-calendar--fixed-top"
+      >
+        <view class="uni-date-changed--time-start">
+          <view class="uni-date-changed--time-date">
+            {{ tempRange.before ? tempRange.before : startDateText }}
+          </view>
+          <time-picker
+            v-model="timeRange.startTime"
+            type="time"
+            :start="reactStartTime"
+            :border="false"
+            :hide-second="hideSecond"
+            :disabled="!tempRange.before"
+            class="time-picker-style"
+          />
+        </view>
+        <uni-icons
+          type="arrowthinright"
+          color="#999"
+          style="line-height: 50px;"
+        />
+        <view class="uni-date-changed--time-end">
+          <view class="uni-date-changed--time-date">
+            {{ tempRange.after ? tempRange.after : endDateText }}
+          </view>
+          <time-picker
+            v-model="timeRange.endTime"
+            type="time"
+            :end="reactEndTime"
+            :border="false"
+            :hide-second="hideSecond"
+            :disabled="!tempRange.after"
+            class="time-picker-style"
+          />
+        </view>
+      </view>
+      <view
+        v-if="!insert"
+        class="uni-date-changed uni-date-btn--ok"
+      >
+        <!-- <view class="uni-calendar__header-btn-box">
 					<text class="uni-calendar__button-text uni-calendar--fixed-width">{{okText}}</text>
 				</view> -->
-				<view class="uni-datetime-picker--btn" @click="confirm">确认</view>
-			</view>
-		</view>
-	</view>
+        <view
+          class="uni-datetime-picker--btn"
+          @click="confirm"
+        >
+          确认
+        </view>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>
-	import Calendar from './util.js';
-	import calendarItem from './calendar-item.vue'
-	import timePicker from './time-picker.vue'
 	import {
 		initVueI18n
 	} from '@dcloudio/uni-i18n'
+
+	import calendarItem from './calendar-item.vue'
 	import messages from './i18n/index.js'
+	import timePicker from './time-picker.vue'
+	import Calendar from './util.js'
 	const {
 		t
 	} = initVueI18n(messages)
@@ -229,6 +347,54 @@
 				}
 			}
 		},
+		computed: {
+			reactStartTime() {
+				const activeDate = this.range ? this.tempRange.before : this.calendar.fullDate
+				const res = activeDate === this.startDate ? this.selectableTimes.start : ''
+				return res
+			},
+			reactEndTime() {
+				const activeDate = this.range ? this.tempRange.after : this.calendar.fullDate
+				const res = activeDate === this.endDate ? this.selectableTimes.end : ''
+				return res
+			},
+			/**
+			 * for i18n
+			 */
+			selectDateText() {
+				return t("uni-datetime-picker.selectDate")
+			},
+			startDateText() {
+				return this.startPlaceholder || t("uni-datetime-picker.startDate")
+			},
+			endDateText() {
+				return this.endPlaceholder || t("uni-datetime-picker.endDate")
+			},
+			okText() {
+				return t("uni-datetime-picker.ok")
+			},
+			monText() {
+				return t("uni-calender.MON")
+			},
+			TUEText() {
+				return t("uni-calender.TUE")
+			},
+			WEDText() {
+				return t("uni-calender.WED")
+			},
+			THUText() {
+				return t("uni-calender.THU")
+			},
+			FRIText() {
+				return t("uni-calender.FRI")
+			},
+			SATText() {
+				return t("uni-calender.SAT")
+			},
+			SUNText() {
+				return t("uni-calender.SUN")
+			},
+		},
 		watch: {
 			date: {
 				immediate: true,
@@ -306,54 +472,6 @@
 				}
 			}
 		},
-		computed: {
-			reactStartTime() {
-				const activeDate = this.range ? this.tempRange.before : this.calendar.fullDate
-				const res = activeDate === this.startDate ? this.selectableTimes.start : ''
-				return res
-			},
-			reactEndTime() {
-				const activeDate = this.range ? this.tempRange.after : this.calendar.fullDate
-				const res = activeDate === this.endDate ? this.selectableTimes.end : ''
-				return res
-			},
-			/**
-			 * for i18n
-			 */
-			selectDateText() {
-				return t("uni-datetime-picker.selectDate")
-			},
-			startDateText() {
-				return this.startPlaceholder || t("uni-datetime-picker.startDate")
-			},
-			endDateText() {
-				return this.endPlaceholder || t("uni-datetime-picker.endDate")
-			},
-			okText() {
-				return t("uni-datetime-picker.ok")
-			},
-			monText() {
-				return t("uni-calender.MON")
-			},
-			TUEText() {
-				return t("uni-calender.TUE")
-			},
-			WEDText() {
-				return t("uni-calender.WED")
-			},
-			THUText() {
-				return t("uni-calender.THU")
-			},
-			FRIText() {
-				return t("uni-calender.FRI")
-			},
-			SATText() {
-				return t("uni-calender.SAT")
-			},
-			SUNText() {
-				return t("uni-calender.SUN")
-			},
-		},
 		created() {
 			// 获取日历方法实例
 			this.cale = new Calendar({
@@ -376,7 +494,7 @@
 			handleMouse(weeks) {
 				if (weeks.disable) return
 				if (this.cale.lastHover) return
-				let {
+				const {
 					before,
 					after
 				} = this.cale.multipleStatus
@@ -491,7 +609,7 @@
 			 * 选择月份触发
 			 */
 			monthSwitch() {
-				let {
+				const {
 					year,
 					month
 				} = this.nowDate
@@ -505,7 +623,7 @@
 			 * @param {Object} name
 			 */
 			setEmit(name) {
-				let {
+				const {
 					year,
 					month,
 					date,
@@ -545,7 +663,7 @@
 			 * 回到今天
 			 */
 			backtoday() {
-				let date = this.cale.getDate(new Date()).fullDate
+				const date = this.cale.getDate(new Date()).fullDate
 				// this.cale.setDate(date)
 				this.init(date)
 				this.change()
@@ -560,9 +678,9 @@
 				endDate = new Date(endDate.replace('-', '/').replace('-', '/'))
 				if (startDate <= endDate) {
 					return true
-				} else {
+				} 
 					return false
-				}
+				
 			},
 			/**
 			 * 上个月
@@ -594,7 +712,7 @@
 	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	.uni-calendar {
 		/* #ifndef APP-NVUE */
 		display: flex;

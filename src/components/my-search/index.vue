@@ -1,8 +1,20 @@
 <template>
-  <view class="my-search-container" :style="{backgroundColor:props.bgColor}">
-    <view @click="clickHandle()" class="my-search-box" :style="{borderRadius:props.radius+'px',}">
-      <uni-icon type="search" size="30"></uni-icon>
-      <text class="placeholder">搜索</text>
+  <view
+    class="my-search-container"
+    :style="{backgroundColor:props.bgColor}"
+  >
+    <view
+      class="my-search-box"
+      :style="{borderRadius:props.radius+'px',}"
+      @click="clickHandle()"
+    >
+      <uni-icon
+        type="search"
+        size="30"
+      />
+      <text class="placeholder">
+        搜索
+      </text>
     </view>
   </view>
 </template>
@@ -13,15 +25,15 @@
     bgColor?:string,
     radius?:number
   }
-  const props=withDefaults(defineProps<PropDate>(),{
+  const props = withDefaults(defineProps<PropDate>(),{
     bgColor:'#c00000',
     radius:18
   })
 
-  const emit=defineEmits<{
+  const emit = defineEmits<{
     (e:'myClick'):void
   }>()
-  const clickHandle=()=>{
+  const clickHandle = () => {
     emit('myClick')
   }
 </script>

@@ -1,32 +1,75 @@
 <template>
-	<view v-if="show" class="uni-noticebar" :style="{ backgroundColor: backgroundColor }" @click="onClick">
-		<uni-icons v-if="showIcon === true || showIcon === 'true'" class="uni-noticebar-icon" type="sound"
-			:color="color" size="22" />
-		<view ref="textBox" class="uni-noticebar__content-wrapper"
-			:class="{'uni-noticebar__content-wrapper--scrollable':scrollable, 'uni-noticebar__content-wrapper--single':!scrollable && (single || moreText)}">
-			<view :id="elIdBox" class="uni-noticebar__content"
-				:class="{'uni-noticebar__content--scrollable':scrollable, 'uni-noticebar__content--single':!scrollable && (single || moreText)}">
-				<text :id="elId" ref="animationEle" class="uni-noticebar__content-text"
-					:class="{'uni-noticebar__content-text--scrollable':scrollable,'uni-noticebar__content-text--single':!scrollable && (single || showGetMore)}"
-					:style="{color:color, width:wrapWidth+'px', 'animationDuration': animationDuration, '-webkit-animationDuration': animationDuration ,animationPlayState: webviewHide?'paused':animationPlayState,'-webkit-animationPlayState':webviewHide?'paused':animationPlayState, animationDelay: animationDelay, '-webkit-animationDelay':animationDelay}">{{text}}</text>
-			</view>
-		</view>
-		<view v-if="showGetMore === true || showGetMore === 'true'" class="uni-noticebar__more uni-cursor-point"
-			@click="clickMore">
-			<text v-if="moreText.length > 0" :style="{ color: moreColor }" class="uni-noticebar__more-text">{{ moreText }}</text>
-			<uni-icons v-else type="right" :color="moreColor" size="16" />
-		</view>
-		<view class="uni-noticebar-close uni-cursor-point" v-if="(showClose === true || showClose === 'true') && (showGetMore === false || showGetMore === 'false')">
-			<uni-icons
-				type="closeempty" :color="color" size="16" @click="close" />
-		</view>
-	</view>
+  <view
+    v-if="show"
+    class="uni-noticebar"
+    :style="{ backgroundColor: backgroundColor }"
+    @click="onClick"
+  >
+    <uni-icons
+      v-if="showIcon === true || showIcon === 'true'"
+      class="uni-noticebar-icon"
+      type="sound"
+      :color="color"
+      size="22"
+    />
+    <view
+      ref="textBox"
+      class="uni-noticebar__content-wrapper"
+      :class="{'uni-noticebar__content-wrapper--scrollable':scrollable, 'uni-noticebar__content-wrapper--single':!scrollable && (single || moreText)}"
+    >
+      <view
+        :id="elIdBox"
+        class="uni-noticebar__content"
+        :class="{'uni-noticebar__content--scrollable':scrollable, 'uni-noticebar__content--single':!scrollable && (single || moreText)}"
+      >
+        <text
+          :id="elId"
+          ref="animationEle"
+          class="uni-noticebar__content-text"
+          :class="{'uni-noticebar__content-text--scrollable':scrollable,'uni-noticebar__content-text--single':!scrollable && (single || showGetMore)}"
+          :style="{color:color, width:wrapWidth+'px', 'animationDuration': animationDuration, '-webkit-animationDuration': animationDuration ,animationPlayState: webviewHide?'paused':animationPlayState,'-webkit-animationPlayState':webviewHide?'paused':animationPlayState, animationDelay: animationDelay, '-webkit-animationDelay':animationDelay}"
+        >
+          {{ text }}
+        </text>
+      </view>
+    </view>
+    <view
+      v-if="showGetMore === true || showGetMore === 'true'"
+      class="uni-noticebar__more uni-cursor-point"
+      @click="clickMore"
+    >
+      <text
+        v-if="moreText.length > 0"
+        :style="{ color: moreColor }"
+        class="uni-noticebar__more-text"
+      >
+        {{ moreText }}
+      </text>
+      <uni-icons
+        v-else
+        type="right"
+        :color="moreColor"
+        size="16"
+      />
+    </view>
+    <view
+      v-if="(showClose === true || showClose === 'true') && (showGetMore === false || showGetMore === 'false')"
+      class="uni-noticebar-close uni-cursor-point"
+    >
+      <uni-icons
+        type="closeempty"
+        :color="color"
+        size="16"
+        @click="close"
+      />
+    </view>
+  </view>
 </template>
 
 <script>
 	// #ifdef APP-NVUE
-	const dom = weex.requireModule('dom');
-	const animation = weex.requireModule('animation');
+	const dom = weex.requireModule('dom')
+	const animation = weex.requireModule('animation')
 	// #endif
 
 	/**
@@ -51,7 +94,6 @@
 
 	export default {
 		name: 'UniNoticeBar',
-		emits: ['click', 'getmore', 'close'],
 		props: {
 			text: {
 				type: String,
@@ -104,6 +146,7 @@
 				default: false
 			}
 		},
+		emits: ['click', 'getmore', 'close'],
 		data() {
 			const elId = `Uni_${Math.ceil(Math.random() * 10e5).toString(36)}`
 			const elIdBox = `Uni_${Math.ceil(Math.random() * 10e5).toString(36)}`
@@ -125,9 +168,9 @@
 		},
 		mounted() {
 			// #ifdef APP-PLUS
-			var pages = getCurrentPages();
-			var page = pages[pages.length - 1];
-			var currentWebview = page.$getAppWebview();
+			const pages = getCurrentPages()
+			const page = pages[pages.length - 1]
+			const currentWebview = page.$getAppWebview()
 			currentWebview.addEventListener('hide', () => {
 				this.webviewHide = true
 			})
@@ -140,7 +183,7 @@
 			})
 		},
 		// #ifdef APP-NVUE
-		beforeDestroy() {
+		beforeUnmount() {
 			this.stopAnimation = true
 		},
 		// #endif
@@ -148,10 +191,10 @@
 			initSize() {
 				if (this.scrollable) {
 					// #ifndef APP-NVUE
-					let query = [],
+					const query = [],
 						boxWidth = 0,
-						textWidth = 0;
-					let textQuery = new Promise((resolve, reject) => {
+						textWidth = 0
+					const textQuery = new Promise((resolve, reject) => {
 						uni.createSelectorQuery()
 							// #ifndef MP-ALIPAY
 							.in(this)
@@ -163,7 +206,7 @@
 								resolve()
 							})
 					})
-					let boxQuery = new Promise((resolve, reject) => {
+					const boxQuery = new Promise((resolve, reject) => {
 						uni.createSelectorQuery()
 							// #ifndef MP-ALIPAY
 							.in(this)
@@ -186,10 +229,10 @@
 					})
 					// #endif
 					// #ifdef APP-NVUE
-					dom.getComponentRect(this.$refs['animationEle'], (res) => {
-						let winWidth = uni.getSystemInfoSync().windowWidth
+					dom.getComponentRect(this.$refs.animationEle, (res) => {
+						const winWidth = uni.getSystemInfoSync().windowWidth
 						this.textWidth = res.size.width
-						animation.transition(this.$refs['animationEle'], {
+						animation.transition(this.$refs.animationEle, {
 							styles: {
 								transform: `translateX(-${winWidth}px)`
 							},
@@ -198,7 +241,7 @@
 							delay: 0
 						}, () => {
 							if (!this.stopAnimation) {
-								animation.transition(this.$refs['animationEle'], {
+								animation.transition(this.$refs.animationEle, {
 									styles: {
 										transform: `translateX(-${this.textWidth}px)`
 									},
@@ -209,15 +252,15 @@
 									if (!this.stopAnimation) {
 										this.loopAnimation()
 									}
-								});
+								})
 							}
-						});
+						})
 					})
 					// #endif
 				}
 				// #ifdef APP-NVUE
 				if (!this.scrollable && (this.single || this.moreText)) {
-					dom.getComponentRect(this.$refs['textBox'], (res) => {
+					dom.getComponentRect(this.$refs.textBox, (res) => {
 						this.wrapWidth = res.size.width
 					})
 				}
@@ -225,14 +268,14 @@
 			},
 			loopAnimation() {
 				// #ifdef APP-NVUE
-				animation.transition(this.$refs['animationEle'], {
+				animation.transition(this.$refs.animationEle, {
 					styles: {
 						transform: `translateX(0px)`
 					},
 					duration: 0
 				}, () => {
 					if (!this.stopAnimation) {
-						animation.transition(this.$refs['animationEle'], {
+						animation.transition(this.$refs.animationEle, {
 							styles: {
 								transform: `translateX(-${this.textWidth}px)`
 							},
@@ -243,16 +286,16 @@
 							if (!this.stopAnimation) {
 								this.loopAnimation()
 							}
-						});
+						})
 					}
-				});
+				})
 				// #endif
 			},
 			clickMore() {
 				this.$emit('getmore')
 			},
 			close() {
-				this.show = false;
+				this.show = false
 				this.$emit('close')
 			},
 			onClick() {
@@ -262,7 +305,7 @@
 	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	.uni-noticebar {
 		/* #ifndef APP-NVUE */
 		display: flex;

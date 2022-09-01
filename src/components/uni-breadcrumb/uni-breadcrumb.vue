@@ -1,7 +1,7 @@
 <template>
-	<view class="uni-breadcrumb">
-		<slot />
-	</view>
+  <view class="uni-breadcrumb">
+    <slot />
+  </view>
 </template>
 <script>
 	/**
@@ -12,6 +12,12 @@
 	 * @property {String} separatorClass 图标分隔符 class
 	 */
 	export default {
+
+		provide() {
+			return {
+				uniBreadcrumb: this
+			}
+		},
 		props: {
 			separator: {
 				type: String,
@@ -20,12 +26,6 @@
 			separatorClass: {
 				type: String,
 				default: ''
-			}
-		},
-
-		provide() {
-			return {
-				uniBreadcrumb: this
 			}
 		}
 

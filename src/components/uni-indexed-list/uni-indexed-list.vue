@@ -1,63 +1,107 @@
 <template>
-	<view class="uni-indexed-list" ref="list" id="list">
-		<!-- #ifdef APP-NVUE -->
-		<list class="uni-indexed-list__scroll" scrollable="true" show-scrollbar="false">
-			<cell v-for="(list, idx) in lists" :key="idx" :ref="'uni-indexed-list-' + idx">
-				<!-- #endif -->
-				<!-- #ifndef APP-NVUE -->
-				<scroll-view :scroll-into-view="scrollViewId" class="uni-indexed-list__scroll" scroll-y>
-					<view v-for="(list, idx) in lists" :key="idx" :id="'uni-indexed-list-' + idx">
-						<!-- #endif -->
-						<indexed-list-item :list="list" :loaded="loaded" :idx="idx" :showSelect="showSelect"
-							@itemClick="onClick"></indexed-list-item>
-						<!-- #ifndef APP-NVUE -->
-					</view>
-				</scroll-view>
-				<!-- #endif -->
-				<!-- #ifdef APP-NVUE -->
-			</cell>
-		</list>
-		<!-- #endif -->
-		<view class="uni-indexed-list__menu" @touchstart="touchStart" @touchmove.stop.prevent="touchMove"
-			@touchend="touchEnd" @mousedown.stop="mousedown" @mousemove.stop.prevent="mousemove"
-			@mouseleave.stop="mouseleave">
-			<view v-for="(list, key) in lists" :key="key" class="uni-indexed-list__menu-item"
-				:class="touchmoveIndex == key ? 'uni-indexed-list__menu--active' : ''">
-				<text class="uni-indexed-list__menu-text"
-					:class="touchmoveIndex == key ? 'uni-indexed-list__menu-text--active' : ''">{{ list.key }}</text>
-			</view>
-		</view>
-		<view v-if="touchmove" class="uni-indexed-list__alert-wrapper">
-			<text class="uni-indexed-list__alert">{{ lists[touchmoveIndex].key }}</text>
-		</view>
-	</view>
+  <view
+    id="list"
+    ref="list"
+    class="uni-indexed-list"
+  >
+    <!-- #ifdef APP-NVUE -->
+    <list
+      class="uni-indexed-list__scroll"
+      scrollable="true"
+      show-scrollbar="false"
+    >
+      <cell
+        v-for="(list, idx) in lists"
+        :key="idx"
+        :ref="'uni-indexed-list-' + idx"
+      >
+        <!-- #endif -->
+        <!-- #ifndef APP-NVUE -->
+        <scroll-view
+          :scroll-into-view="scrollViewId"
+          class="uni-indexed-list__scroll"
+          scroll-y
+        >
+          <view
+            v-for="(list, idx) in lists"
+            :id="'uni-indexed-list-' + idx"
+            :key="idx"
+          >
+            <!-- #endif -->
+            <indexed-list-item
+              :list="list"
+              :loaded="loaded"
+              :idx="idx"
+              :show-select="showSelect"
+              @itemClick="onClick"
+            />
+            <!-- #ifndef APP-NVUE -->
+          </view>
+        </scroll-view>
+        <!-- #endif -->
+        <!-- #ifdef APP-NVUE -->
+      </cell>
+    </list>
+    <!-- #endif -->
+    <view
+      class="uni-indexed-list__menu"
+      @touchstart="touchStart"
+      @touchmove.stop.prevent="touchMove"
+      @touchend="touchEnd"
+      @mousedown.stop="mousedown"
+      @mousemove.stop.prevent="mousemove"
+      @mouseleave.stop="mouseleave"
+    >
+      <view
+        v-for="(list, key) in lists"
+        :key="key"
+        class="uni-indexed-list__menu-item"
+        :class="touchmoveIndex == key ? 'uni-indexed-list__menu--active' : ''"
+      >
+        <text
+          class="uni-indexed-list__menu-text"
+          :class="touchmoveIndex == key ? 'uni-indexed-list__menu-text--active' : ''"
+        >
+          {{ list.key }}
+        </text>
+      </view>
+    </view>
+    <view
+      v-if="touchmove"
+      class="uni-indexed-list__alert-wrapper"
+    >
+      <text class="uni-indexed-list__alert">
+        {{ lists[touchmoveIndex].key }}
+      </text>
+    </view>
+  </view>
 </template>
 <script>
 	import indexedListItem from './uni-indexed-list-item.vue'
 	// #ifdef APP-NVUE
-	const dom = weex.requireModule('dom');
+	const dom = weex.requireModule('dom')
 	// #endif
 	// #ifdef APP-PLUS
 	function throttle(func, delay) {
-		var prev = Date.now();
+		let prev = Date.now()
 		return function() {
-			var context = this;
-			var args = arguments;
-			var now = Date.now();
+			const context = this
+			const args = arguments
+			const now = Date.now()
 			if (now - prev >= delay) {
-				func.apply(context, args);
-				prev = Date.now();
+				func.apply(context, args)
+				prev = Date.now()
 			}
 		}
 	}
 
 	function touchMove(e) {
-		let pageY = e.touches[0].pageY
-		let index = Math.floor((pageY - this.winOffsetY) / this.itemHeight)
+		const pageY = e.touches[0].pageY
+		const index = Math.floor((pageY - this.winOffsetY) / this.itemHeight)
 		if (this.touchmoveIndex === index) {
 			return false
 		}
-		let item = this.lists[index]
+		const item = this.lists[index]
 		if (item) {
 			// #ifndef APP-NVUE
 			this.scrollViewId = 'uni-indexed-list-' + index
@@ -90,7 +134,6 @@
 		components: {
 			indexedListItem
 		},
-		emits: ['click'],
 		props: {
 			options: {
 				type: Array,
@@ -103,6 +146,7 @@
 				default: false
 			}
 		},
+		emits: ['click'],
 		data() {
 			return {
 				lists: [],
@@ -134,22 +178,22 @@
 			}, 50)
 			setTimeout(() => {
 				this.loaded = true
-			}, 300);
+			}, 300)
 		},
 		methods: {
 			setList() {
-				let index = 0;
+				let index = 0
 				this.lists = []
 				this.options.forEach((value) => {
 					if (value.data.length === 0) {
 						return
 					}
-					let indexBefore = index
-					let items = value.data.map(item => {
-						let obj = {}
-						obj['key'] = value.letter
-						obj['name'] = item
-						obj['itemIndex'] = index
+					const indexBefore = index
+					const items = value.data.map(item => {
+						const obj = {}
+						obj.key = value.letter
+						obj.name = item
+						obj.itemIndex = index
 						index++
 						obj.checked = item.checked ? item.checked : false
 						return obj
@@ -173,7 +217,7 @@
 					})
 				// #endif
 				// #ifdef APP-NVUE
-				dom.getComponentRect(this.$refs['list'], (res) => {
+				dom.getComponentRect(this.$refs.list, (res) => {
 					this.winOffsetY = res.size.top
 					this.winHeight = res.size.height
 					this.itemHeight = this.winHeight / this.lists.length
@@ -182,9 +226,9 @@
 			},
 			touchStart(e) {
 				this.touchmove = true
-				let pageY = this.isPC ? e.pageY : e.touches[0].pageY
-				let index = Math.floor((pageY - this.winOffsetY) / this.itemHeight)
-				let item = this.lists[index]
+				const pageY = this.isPC ? e.pageY : e.touches[0].pageY
+				const index = Math.floor((pageY - this.winOffsetY) / this.itemHeight)
+				const item = this.lists[index]
 				if (item) {
 					this.scrollViewId = 'uni-indexed-list-' + index
 					this.touchmoveIndex = index
@@ -197,12 +241,12 @@
 			},
 			touchMove(e) {
 				// #ifndef APP-PLUS
-				let pageY = this.isPC ? e.pageY : e.touches[0].pageY
-				let index = Math.floor((pageY - this.winOffsetY) / this.itemHeight)
+				const pageY = this.isPC ? e.pageY : e.touches[0].pageY
+				const index = Math.floor((pageY - this.winOffsetY) / this.itemHeight)
 				if (this.touchmoveIndex === index) {
 					return false
 				}
-				let item = this.lists[index]
+				const item = this.lists[index]
 				if (item) {
 					this.scrollViewId = 'uni-indexed-list-' + index
 					this.touchmoveIndex = index
@@ -236,37 +280,37 @@
 
 			// #ifdef H5
 			IsPC() {
-				var userAgentInfo = navigator.userAgent;
-				var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
-				var flag = true;
+				const userAgentInfo = navigator.userAgent
+				const Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"]
+				let flag = true
 				for (let v = 0; v < Agents.length - 1; v++) {
 					if (userAgentInfo.indexOf(Agents[v]) > 0) {
-						flag = false;
-						break;
+						flag = false
+						break
 					}
 				}
-				return flag;
+				return flag
 			},
 			// #endif
 
 
 			onClick(e) {
-				let {
+				const {
 					idx,
 					index
 				} = e
-				let obj = {}
-				for (let key in this.lists[idx].items[index]) {
+				const obj = {}
+				for (const key in this.lists[idx].items[index]) {
 					obj[key] = this.lists[idx].items[index][key]
 				}
-				let select = []
+				const select = []
 				if (this.showSelect) {
 					this.lists[idx].items[index].checked = !this.lists[idx].items[index].checked
 					this.lists.forEach((value, idx) => {
 						value.items.forEach((item, index) => {
 							if (item.checked) {
-								let obj = {}
-								for (let key in this.lists[idx].items[index]) {
+								const obj = {}
+								for (const key in this.lists[idx].items[index]) {
 									obj[key] = this.lists[idx].items[index][key]
 								}
 								select.push(obj)
@@ -282,7 +326,7 @@
 		}
 	}
 </script>
-<style lang="scss" >
+<style lang="scss">
 	.uni-indexed-list {
 		position: absolute;
 		left: 0;

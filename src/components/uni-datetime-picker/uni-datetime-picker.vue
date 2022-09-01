@@ -1,98 +1,273 @@
 <template>
-	<view class="uni-date">
-		<view class="uni-date-editor" @click="show">
-			<slot>
-				<view class="uni-date-editor--x" :class="{'uni-date-editor--x__disabled': disabled,
-		'uni-date-x--border': border}">
-					<view v-if="!isRange" class="uni-date-x uni-date-single">
-						<uni-icons type="calendar" color="#e1e1e1" size="22"></uni-icons>
-						<input class="uni-date__x-input" type="text" v-model="singleVal"
-							:placeholder="singlePlaceholderText" :disabled="true" />
-					</view>
-					<view v-else class="uni-date-x uni-date-range">
-						<uni-icons type="calendar" color="#e1e1e1" size="22"></uni-icons>
-						<input class="uni-date__x-input t-c" type="text" v-model="range.startDate"
-							:placeholder="startPlaceholderText" :disabled="true" />
-						<slot>
-							<view class="">{{rangeSeparator}}</view>
-						</slot>
-						<input class="uni-date__x-input t-c" type="text" v-model="range.endDate"
-							:placeholder="endPlaceholderText" :disabled="true" />
-					</view>
-					<view v-if="showClearIcon" class="uni-date__icon-clear" @click.stop="clear">
-						<uni-icons type="clear" color="#e1e1e1" size="18"></uni-icons>
-					</view>
-				</view>
-			</slot>
-		</view>
+  <view class="uni-date">
+    <view
+      class="uni-date-editor"
+      @click="show"
+    >
+      <slot>
+        <view
+          class="uni-date-editor--x"
+          :class="{'uni-date-editor--x__disabled': disabled,
+                   'uni-date-x--border': border}"
+        >
+          <view
+            v-if="!isRange"
+            class="uni-date-x uni-date-single"
+          >
+            <uni-icons
+              type="calendar"
+              color="#e1e1e1"
+              size="22"
+            />
+            <input
+              v-model="singleVal"
+              class="uni-date__x-input"
+              type="text"
+              :placeholder="singlePlaceholderText"
+              :disabled="true"
+            >
+          </view>
+          <view
+            v-else
+            class="uni-date-x uni-date-range"
+          >
+            <uni-icons
+              type="calendar"
+              color="#e1e1e1"
+              size="22"
+            />
+            <input
+              v-model="range.startDate"
+              class="uni-date__x-input t-c"
+              type="text"
+              :placeholder="startPlaceholderText"
+              :disabled="true"
+            >
+            <slot>
+              <view class="">
+                {{ rangeSeparator }}
+              </view>
+            </slot>
+            <input
+              v-model="range.endDate"
+              class="uni-date__x-input t-c"
+              type="text"
+              :placeholder="endPlaceholderText"
+              :disabled="true"
+            >
+          </view>
+          <view
+            v-if="showClearIcon"
+            class="uni-date__icon-clear"
+            @click.stop="clear"
+          >
+            <uni-icons
+              type="clear"
+              color="#e1e1e1"
+              size="18"
+            />
+          </view>
+        </view>
+      </slot>
+    </view>
 
-		<view v-show="popup" class="uni-date-mask" @click="close"></view>
-		<view v-if="!isPhone" ref="datePicker" v-show="popup" class="uni-date-picker__container">
-			<view v-if="!isRange" class="uni-date-single--x" :style="popover">
-				<view class="uni-popper__arrow"></view>
-				<view v-if="hasTime" class="uni-date-changed popup-x-header">
-					<input class="uni-date__input t-c" type="text" v-model="tempSingleDate"
-						:placeholder="selectDateText" />
-					<time-picker type="time" v-model="time" :border="false" :disabled="!tempSingleDate"
-						:start="reactStartTime" :end="reactEndTime" :hideSecond="hideSecond" style="width: 100%;">
-						<input class="uni-date__input t-c" type="text" v-model="time" :placeholder="selectTimeText"
-							:disabled="!tempSingleDate" />
-					</time-picker>
-				</view>
-				<calendar ref="pcSingle" :showMonth="false" :start-date="caleRange.startDate"
-					:end-date="caleRange.endDate" :date="defSingleDate" @change="singleChange"
-					style="padding: 0 8px;" />
-				<view v-if="hasTime" class="popup-x-footer">
-					<!-- <text class="">此刻</text> -->
-					<text class="confirm" @click="confirmSingleChange">{{okText}}</text>
-				</view>
-				<view class="uni-date-popper__arrow"></view>
-			</view>
+    <view
+      v-show="popup"
+      class="uni-date-mask"
+      @click="close"
+    />
+    <view
+      v-if="!isPhone"
+      v-show="popup"
+      ref="datePicker"
+      class="uni-date-picker__container"
+    >
+      <view
+        v-if="!isRange"
+        class="uni-date-single--x"
+        :style="popover"
+      >
+        <view class="uni-popper__arrow" />
+        <view
+          v-if="hasTime"
+          class="uni-date-changed popup-x-header"
+        >
+          <input
+            v-model="tempSingleDate"
+            class="uni-date__input t-c"
+            type="text"
+            :placeholder="selectDateText"
+          >
+          <time-picker
+            v-model="time"
+            type="time"
+            :border="false"
+            :disabled="!tempSingleDate"
+            :start="reactStartTime"
+            :end="reactEndTime"
+            :hide-second="hideSecond"
+            style="width: 100%;"
+          >
+            <input
+              v-model="time"
+              class="uni-date__input t-c"
+              type="text"
+              :placeholder="selectTimeText"
+              :disabled="!tempSingleDate"
+            >
+          </time-picker>
+        </view>
+        <calendar
+          ref="pcSingle"
+          :show-month="false"
+          :start-date="caleRange.startDate"
+          :end-date="caleRange.endDate"
+          :date="defSingleDate"
+          style="padding: 0 8px;"
+          @change="singleChange"
+        />
+        <view
+          v-if="hasTime"
+          class="popup-x-footer"
+        >
+          <!-- <text class="">此刻</text> -->
+          <text
+            class="confirm"
+            @click="confirmSingleChange"
+          >
+            {{ okText }}
+          </text>
+        </view>
+        <view class="uni-date-popper__arrow" />
+      </view>
 
-			<view v-else class="uni-date-range--x" :style="popover">
-				<view class="uni-popper__arrow"></view>
-				<view v-if="hasTime" class="popup-x-header uni-date-changed">
-					<view class="popup-x-header--datetime">
-						<input class="uni-date__input uni-date-range__input" type="text" v-model="tempRange.startDate"
-							:placeholder="startDateText" />
-						<time-picker type="time" v-model="tempRange.startTime" :start="reactStartTime" :border="false"
-							:disabled="!tempRange.startDate" :hideSecond="hideSecond">
-							<input class="uni-date__input uni-date-range__input" type="text"
-								v-model="tempRange.startTime" :placeholder="startTimeText"
-								:disabled="!tempRange.startDate" />
-						</time-picker>
-					</view>
-					<uni-icons type="arrowthinright" color="#999" style="line-height: 40px;"></uni-icons>
-					<view class="popup-x-header--datetime">
-						<input class="uni-date__input uni-date-range__input" type="text" v-model="tempRange.endDate"
-							:placeholder="endDateText" />
-						<time-picker type="time" v-model="tempRange.endTime" :end="reactEndTime" :border="false"
-							:disabled="!tempRange.endDate" :hideSecond="hideSecond">
-							<input class="uni-date__input uni-date-range__input" type="text" v-model="tempRange.endTime"
-								:placeholder="endTimeText" :disabled="!tempRange.endDate" />
-						</time-picker>
-					</view>
-				</view>
-				<view class="popup-x-body">
-					<calendar ref="left" :showMonth="false" :start-date="caleRange.startDate"
-						:end-date="caleRange.endDate" :range="true" @change="leftChange" :pleStatus="endMultipleStatus"
-						@firstEnterCale="updateRightCale" @monthSwitch="leftMonthSwitch" style="padding: 0 8px;" />
-					<calendar ref="right" :showMonth="false" :start-date="caleRange.startDate"
-						:end-date="caleRange.endDate" :range="true" @change="rightChange"
-						:pleStatus="startMultipleStatus" @firstEnterCale="updateLeftCale"
-						@monthSwitch="rightMonthSwitch" style="padding: 0 8px;border-left: 1px solid #F1F1F1;" />
-				</view>
-				<view v-if="hasTime" class="popup-x-footer">
-					<text class="" @click="clear">{{clearText}}</text>
-					<text class="confirm" @click="confirmRangeChange">{{okText}}</text>
-				</view>
-			</view>
-		</view>
-		<calendar v-show="isPhone" ref="mobile" :clearDate="false" :date="defSingleDate" :defTime="reactMobDefTime"
-			:start-date="caleRange.startDate" :end-date="caleRange.endDate" :selectableTimes="mobSelectableTime"
-			:pleStatus="endMultipleStatus" :showMonth="false" :range="isRange" :typeHasTime="hasTime" :insert="false"
-			:hideSecond="hideSecond" @confirm="mobileChange" />
-	</view>
+      <view
+        v-else
+        class="uni-date-range--x"
+        :style="popover"
+      >
+        <view class="uni-popper__arrow" />
+        <view
+          v-if="hasTime"
+          class="popup-x-header uni-date-changed"
+        >
+          <view class="popup-x-header--datetime">
+            <input
+              v-model="tempRange.startDate"
+              class="uni-date__input uni-date-range__input"
+              type="text"
+              :placeholder="startDateText"
+            >
+            <time-picker
+              v-model="tempRange.startTime"
+              type="time"
+              :start="reactStartTime"
+              :border="false"
+              :disabled="!tempRange.startDate"
+              :hide-second="hideSecond"
+            >
+              <input
+                v-model="tempRange.startTime"
+                class="uni-date__input uni-date-range__input"
+                type="text"
+                :placeholder="startTimeText"
+                :disabled="!tempRange.startDate"
+              >
+            </time-picker>
+          </view>
+          <uni-icons
+            type="arrowthinright"
+            color="#999"
+            style="line-height: 40px;"
+          />
+          <view class="popup-x-header--datetime">
+            <input
+              v-model="tempRange.endDate"
+              class="uni-date__input uni-date-range__input"
+              type="text"
+              :placeholder="endDateText"
+            >
+            <time-picker
+              v-model="tempRange.endTime"
+              type="time"
+              :end="reactEndTime"
+              :border="false"
+              :disabled="!tempRange.endDate"
+              :hide-second="hideSecond"
+            >
+              <input
+                v-model="tempRange.endTime"
+                class="uni-date__input uni-date-range__input"
+                type="text"
+                :placeholder="endTimeText"
+                :disabled="!tempRange.endDate"
+              >
+            </time-picker>
+          </view>
+        </view>
+        <view class="popup-x-body">
+          <calendar
+            ref="left"
+            :show-month="false"
+            :start-date="caleRange.startDate"
+            :end-date="caleRange.endDate"
+            :range="true"
+            :ple-status="endMultipleStatus"
+            style="padding: 0 8px;"
+            @change="leftChange"
+            @firstEnterCale="updateRightCale"
+            @monthSwitch="leftMonthSwitch"
+          />
+          <calendar
+            ref="right"
+            :show-month="false"
+            :start-date="caleRange.startDate"
+            :end-date="caleRange.endDate"
+            :range="true"
+            :ple-status="startMultipleStatus"
+            style="padding: 0 8px;border-left: 1px solid #F1F1F1;"
+            @change="rightChange"
+            @firstEnterCale="updateLeftCale"
+            @monthSwitch="rightMonthSwitch"
+          />
+        </view>
+        <view
+          v-if="hasTime"
+          class="popup-x-footer"
+        >
+          <text
+            class=""
+            @click="clear"
+          >
+            {{ clearText }}
+          </text>
+          <text
+            class="confirm"
+            @click="confirmRangeChange"
+          >
+            {{ okText }}
+          </text>
+        </view>
+      </view>
+    </view>
+    <calendar
+      v-show="isPhone"
+      ref="mobile"
+      :clear-date="false"
+      :date="defSingleDate"
+      :def-time="reactMobDefTime"
+      :start-date="caleRange.startDate"
+      :end-date="caleRange.endDate"
+      :selectable-times="mobSelectableTime"
+      :ple-status="endMultipleStatus"
+      :show-month="false"
+      :range="isRange"
+      :type-has-time="hasTime"
+      :insert="false"
+      :hide-second="hideSecond"
+      @confirm="mobileChange"
+    />
+  </view>
 </template>
 <script>
 	/**
@@ -115,12 +290,13 @@
 	 * @event {Function} close 关闭弹出层
 	 * @event {Function} clear 清除上次选中的状态和值
 	 **/
-	import calendar from './calendar.vue'
-	import timePicker from './time-picker.vue'
 	import {
 		initVueI18n
 	} from '@dcloudio/uni-i18n'
+
+	import calendar from './calendar.vue'
 	import messages from './i18n/index.js'
+	import timePicker from './time-picker.vue'
 	const {
 		t
 	} = initVueI18n(messages)
@@ -130,56 +306,6 @@
 		components: {
 			calendar,
 			timePicker
-		},
-		data() {
-			return {
-				isRange: false,
-				hasTime: false,
-				mobileRange: false,
-				// 单选
-				singleVal: '',
-				tempSingleDate: '',
-				defSingleDate: '',
-				time: '',
-				// 范围选
-				caleRange: {
-					startDate: '',
-					startTime: '',
-					endDate: '',
-					endTime: ''
-				},
-				range: {
-					startDate: '',
-					// startTime: '',
-					endDate: '',
-					// endTime: ''
-				},
-				tempRange: {
-					startDate: '',
-					startTime: '',
-					endDate: '',
-					endTime: ''
-				},
-				// 左右日历同步数据
-				startMultipleStatus: {
-					before: '',
-					after: '',
-					data: [],
-					fulldate: ''
-				},
-				endMultipleStatus: {
-					before: '',
-					after: '',
-					data: [],
-					fulldate: ''
-				},
-				visible: false,
-				popup: false,
-				popover: null,
-				isEmitValue: false,
-				isPhone: false,
-				isFirstShow: true,
-			}
 		},
 		props: {
 			type: {
@@ -239,74 +365,55 @@
 				default: false
 			}
 		},
-		watch: {
-			type: {
-				immediate: true,
-				handler(newVal, oldVal) {
-					if (newVal.indexOf('time') !== -1) {
-						this.hasTime = true
-					} else {
-						this.hasTime = false
-					}
-					if (newVal.indexOf('range') !== -1) {
-						this.isRange = true
-					} else {
-						this.isRange = false
-					}
-				}
-			},
-			// #ifndef VUE3
-			value: {
-				immediate: true,
-				handler(newVal, oldVal) {
-					if (this.isEmitValue) {
-						this.isEmitValue = false
-						return
-					}
-					this.initPicker(newVal)
-				}
-			},
-			// #endif
-			// #ifdef VUE3
-			modelValue: {
-				immediate: true,
-				handler(newVal, oldVal) {
-					if (this.isEmitValue) {
-						this.isEmitValue = false
-						return
-					}
-					this.initPicker(newVal)
-				}
-			},
-			// #endif
-			start: {
-				immediate: true,
-				handler(newVal, oldVal) {
-					if (!newVal) return
-					const {
-						defDate,
-						defTime
-					} = this.parseDate(newVal)
-					this.caleRange.startDate = defDate
-					if (this.hasTime) {
-						this.caleRange.startTime = defTime
-					}
-				}
-			},
-			end: {
-				immediate: true,
-				handler(newVal, oldVal) {
-					if (!newVal) return
-					const {
-						defDate,
-						defTime
-					} = this.parseDate(newVal)
-					this.caleRange.endDate = defDate
-					if (this.hasTime) {
-						this.caleRange.endTime = defTime
-					}
-				}
-			},
+		data() {
+			return {
+				isRange: false,
+				hasTime: false,
+				mobileRange: false,
+				// 单选
+				singleVal: '',
+				tempSingleDate: '',
+				defSingleDate: '',
+				time: '',
+				// 范围选
+				caleRange: {
+					startDate: '',
+					startTime: '',
+					endDate: '',
+					endTime: ''
+				},
+				range: {
+					startDate: '',
+					// startTime: '',
+					endDate: '',
+					// endTime: ''
+				},
+				tempRange: {
+					startDate: '',
+					startTime: '',
+					endDate: '',
+					endTime: ''
+				},
+				// 左右日历同步数据
+				startMultipleStatus: {
+					before: '',
+					after: '',
+					data: [],
+					fulldate: ''
+				},
+				endMultipleStatus: {
+					before: '',
+					after: '',
+					data: [],
+					fulldate: ''
+				},
+				visible: false,
+				popup: false,
+				popover: null,
+				isEmitValue: false,
+				isPhone: false,
+				isFirstShow: true,
+			}
 		},
 		computed: {
 			reactStartTime() {
@@ -385,6 +492,75 @@
 				return bool
 			}
 		},
+		watch: {
+			type: {
+				immediate: true,
+				handler(newVal, oldVal) {
+					if (newVal.indexOf('time') !== -1) {
+						this.hasTime = true
+					} else {
+						this.hasTime = false
+					}
+					if (newVal.indexOf('range') !== -1) {
+						this.isRange = true
+					} else {
+						this.isRange = false
+					}
+				}
+			},
+			// #ifndef VUE3
+			value: {
+				immediate: true,
+				handler(newVal, oldVal) {
+					if (this.isEmitValue) {
+						this.isEmitValue = false
+						return
+					}
+					this.initPicker(newVal)
+				}
+			},
+			// #endif
+			// #ifdef VUE3
+			modelValue: {
+				immediate: true,
+				handler(newVal, oldVal) {
+					if (this.isEmitValue) {
+						this.isEmitValue = false
+						return
+					}
+					this.initPicker(newVal)
+				}
+			},
+			// #endif
+			start: {
+				immediate: true,
+				handler(newVal, oldVal) {
+					if (!newVal) return
+					const {
+						defDate,
+						defTime
+					} = this.parseDate(newVal)
+					this.caleRange.startDate = defDate
+					if (this.hasTime) {
+						this.caleRange.startTime = defTime
+					}
+				}
+			},
+			end: {
+				immediate: true,
+				handler(newVal, oldVal) {
+					if (!newVal) return
+					const {
+						defDate,
+						defTime
+					} = this.parseDate(newVal)
+					this.caleRange.endDate = defDate
+					if (this.hasTime) {
+						this.caleRange.endTime = defTime
+					}
+				}
+			},
+		},
 		created() {
 			this.form = this.getForm('uniForms')
 			this.formItem = this.getForm('uniFormsItem')
@@ -404,14 +580,14 @@
 			 * 获取父元素实例
 			 */
 			getForm(name = 'uniForms') {
-				let parent = this.$parent;
-				let parentName = parent.$options.name;
+				let parent = this.$parent
+				let parentName = parent.$options.name
 				while (parentName !== name) {
-					parent = parent.$parent;
+					parent = parent.$parent
 					if (!parent) return false
-					parentName = parent.$options.name;
+					parentName = parent.$options.name
 				}
-				return parent;
+				return parent
 			},
 			initPicker(newVal) {
 				if (!newVal || Array.isArray(newVal) && !newVal.length) {
@@ -682,9 +858,9 @@
 				endDate = new Date(endDate.replace('-', '/').replace('-', '/'))
 				if (startDate <= endDate) {
 					return true
-				} else {
+				} 
 					return false
-				}
+				
 			},
 
 			/**

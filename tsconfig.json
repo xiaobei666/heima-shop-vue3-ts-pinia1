@@ -9,8 +9,9 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "skipLibCheck": true, //忽略所有的声明文件（ *.d.ts）的类型检查,不检查第三方库。
     "lib": ["esnext", "dom"],
-    "types": ["@dcloudio/types","miniprogram-api-typings","mini-types"],
+    "types": ["@dcloudio/types","miniprogram-api-typings","mini-types","vite/client"],
     "baseUrl": ".",
     "paths": {
       "@/*":[

@@ -1,14 +1,27 @@
 <template>
-	<!-- #ifndef APP-NVUE -->
-	<view class="uni-list uni-border-top-bottom">
-		<view v-if="border" class="uni-list--border-top"></view>
-		<slot />
-		<view v-if="border" class="uni-list--border-bottom"></view>
-	</view>
-	<!-- #endif -->
-	<!-- #ifdef APP-NVUE -->
-	<list class="uni-list" :class="{ 'uni-list--border': border }" :enableBackToTop="enableBackToTop" loadmoreoffset="15"><slot /></list>
-	<!-- #endif -->
+  <!-- #ifndef APP-NVUE -->
+  <view class="uni-list uni-border-top-bottom">
+    <view
+      v-if="border"
+      class="uni-list--border-top"
+    />
+    <slot />
+    <view
+      v-if="border"
+      class="uni-list--border-bottom"
+    />
+  </view>
+  <!-- #endif -->
+  <!-- #ifdef APP-NVUE -->
+  <list
+    class="uni-list"
+    :class="{ 'uni-list--border': border }"
+    :enable-back-to-top="enableBackToTop"
+    loadmoreoffset="15"
+  >
+    <slot />
+  </list>
+  <!-- #endif -->
 </template>
 
 <script>
@@ -19,7 +32,7 @@
  * @property {String} 	border = [true|false] 		标题
  */
 export default {
-	name: 'uniList',
+	name: 'UniList',
 	'mp-weixin': {
 		options: {
 			multipleSlots: false
@@ -45,16 +58,16 @@ export default {
 	// 	};
 	// },
 	created() {
-		this.firstChildAppend = false;
+		this.firstChildAppend = false
 	},
 	methods: {
 		loadMore(e) {
-			this.$emit('scrolltolower');
+			this.$emit('scrolltolower')
 		}
 	}
-};
+}
 </script>
-<style lang="scss" >
+<style lang="scss">
 $uni-bg-color:#ffffff;
 $uni-border-color:#e5e5e5;
 .uni-list {

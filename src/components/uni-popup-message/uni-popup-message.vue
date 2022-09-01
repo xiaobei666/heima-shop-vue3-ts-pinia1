@@ -1,11 +1,19 @@
 <template>
-	<view class="uni-popup-message">
-		<view class="uni-popup-message__box fixforpc-width" :class="'uni-popup__'+type">
-			<slot>
-				<text class="uni-popup-message-text" :class="'uni-popup__'+type+'-text'">{{message}}</text>
-			</slot>
-		</view>
-	</view>
+  <view class="uni-popup-message">
+    <view
+      class="uni-popup-message__box fixforpc-width"
+      :class="'uni-popup__'+type"
+    >
+      <slot>
+        <text
+          class="uni-popup-message-text"
+          :class="'uni-popup__'+type+'-text'"
+        >
+          {{ message }}
+        </text>
+      </slot>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -24,7 +32,7 @@
 	 */
 
 	export default {
-		name: 'uniPopupMessage',
+		name: 'UniPopupMessage',
 		mixins:[popup],
 		props: {
 			/**
@@ -61,17 +69,17 @@
 			this.popup.messageChild = this
 		},
 		methods: {
-			timerClose(){
+			timerClose() {
 				if(this.duration === 0) return
 				clearTimeout(this.timer) 
-				this.timer = setTimeout(()=>{
+				this.timer = setTimeout(() => {
 					this.popup.close()
 				},this.duration)
 			}
 		}
 	}
 </script>
-<style lang="scss" >
+<style lang="scss">
 	.uni-popup-message {
 		/* #ifndef APP-NVUE */
 		display: flex;

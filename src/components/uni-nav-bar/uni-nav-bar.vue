@@ -1,53 +1,107 @@
 <template>
-	<view class="uni-navbar" :class="{'uni-dark':dark}">
-		<view :class="{ 'uni-navbar--fixed': fixed, 'uni-navbar--shadow': shadow, 'uni-navbar--border': border }"
-			:style="{ 'background-color': themeBgColor }" class="uni-navbar__content">
-			<status-bar v-if="statusBar" />
-			<view :style="{ color: themeColor,backgroundColor: themeBgColor ,height:navbarHeight}"
-				class="uni-navbar__header">
-				<view @tap="onClickLeft" class="uni-navbar__header-btns uni-navbar__header-btns-left"
-					:style="{width:leftIconWidth}">
-					<slot name="left">
-						<view class="uni-navbar__content_view" v-if="leftIcon.length > 0">
-							<uni-icons :color="themeColor" :type="leftIcon" size="20" />
-						</view>
-						<view :class="{ 'uni-navbar-btn-icon-left': !leftIcon.length > 0 }" class="uni-navbar-btn-text"
-							v-if="leftText.length">
-							<text :style="{ color: themeColor, fontSize: '12px' }">{{ leftText }}</text>
-						</view>
-					</slot>
-				</view>
-				<view class="uni-navbar__header-container " @tap="onClickTitle">
-					<slot>
-						<view class="uni-navbar__header-container-inner" v-if="title.length>0">
-							<text class="uni-nav-bar-text uni-ellipsis-1"
-								:style="{color: themeColor }">{{ title }}</text>
-						</view>
-					</slot>
-				</view>
-				<view @click="onClickRight" class="uni-navbar__header-btns uni-navbar__header-btns-right"
-					:style="{width:rightIconWidth}">
-					<slot name="right">
-						<view v-if="rightIcon.length">
-							<uni-icons :color="themeColor" :type="rightIcon" size="22" />
-						</view>
-						<view class="uni-navbar-btn-text" v-if="rightText.length && !rightIcon.length">
-							<text class="uni-nav-bar-right-text" :style="{ color: themeColor}">{{ rightText }}</text>
-						</view>
-					</slot>
-				</view>
-			</view>
-		</view>
-		<view class="uni-navbar__placeholder" v-if="fixed">
-			<status-bar v-if="statusBar" />
-			<view class="uni-navbar__placeholder-view" :style="{ height:navbarHeight}" />
-		</view>
-	</view>
+  <view
+    class="uni-navbar"
+    :class="{'uni-dark':dark}"
+  >
+    <view
+      :class="{ 'uni-navbar--fixed': fixed, 'uni-navbar--shadow': shadow, 'uni-navbar--border': border }"
+      :style="{ 'background-color': themeBgColor }"
+      class="uni-navbar__content"
+    >
+      <status-bar v-if="statusBar" />
+      <view
+        :style="{ color: themeColor,backgroundColor: themeBgColor ,height:navbarHeight}"
+        class="uni-navbar__header"
+      >
+        <view
+          class="uni-navbar__header-btns uni-navbar__header-btns-left"
+          :style="{width:leftIconWidth}"
+          @tap="onClickLeft"
+        >
+          <slot name="left">
+            <view
+              v-if="leftIcon.length > 0"
+              class="uni-navbar__content_view"
+            >
+              <uni-icons
+                :color="themeColor"
+                :type="leftIcon"
+                size="20"
+              />
+            </view>
+            <view
+              v-if="leftText.length"
+              :class="{ 'uni-navbar-btn-icon-left': !leftIcon.length > 0 }"
+              class="uni-navbar-btn-text"
+            >
+              <text :style="{ color: themeColor, fontSize: '12px' }">
+                {{ leftText }}
+              </text>
+            </view>
+          </slot>
+        </view>
+        <view
+          class="uni-navbar__header-container "
+          @tap="onClickTitle"
+        >
+          <slot>
+            <view
+              v-if="title.length>0"
+              class="uni-navbar__header-container-inner"
+            >
+              <text
+                class="uni-nav-bar-text uni-ellipsis-1"
+                :style="{color: themeColor }"
+              >
+                {{ title }}
+              </text>
+            </view>
+          </slot>
+        </view>
+        <view
+          class="uni-navbar__header-btns uni-navbar__header-btns-right"
+          :style="{width:rightIconWidth}"
+          @click="onClickRight"
+        >
+          <slot name="right">
+            <view v-if="rightIcon.length">
+              <uni-icons
+                :color="themeColor"
+                :type="rightIcon"
+                size="22"
+              />
+            </view>
+            <view
+              v-if="rightText.length && !rightIcon.length"
+              class="uni-navbar-btn-text"
+            >
+              <text
+                class="uni-nav-bar-right-text"
+                :style="{ color: themeColor}"
+              >
+                {{ rightText }}
+              </text>
+            </view>
+          </slot>
+        </view>
+      </view>
+    </view>
+    <view
+      v-if="fixed"
+      class="uni-navbar__placeholder"
+    >
+      <status-bar v-if="statusBar" />
+      <view
+        class="uni-navbar__placeholder-view"
+        :style="{ height:navbarHeight}"
+      />
+    </view>
+  </view>
 </template>
 
 <script>
-	import statusBar from "./uni-status-bar.vue";
-	const getVal = (val) => typeof val === 'number' ? val + 'px' : val;
+	import statusBar from "./uni-status-bar.vue"
+	const getVal = (val) => typeof val === 'number' ? val + 'px' : val
 
 	/**
 	 * NavBar 自定义导航栏
@@ -74,7 +128,6 @@
 		components: {
 			statusBar
 		},
-		emits: ['clickLeft', 'clickRight', 'clickTitle'],
 		props: {
 			dark: {
 				type: Boolean,
@@ -141,15 +194,16 @@
 				default: ''
 			}
 		},
+		emits: ['clickLeft', 'clickRight', 'clickTitle'],
 		computed: {
 			themeBgColor() {
 				if (this.dark) {
 					// 默认值
 					if (this.backgroundColor) {
 						return this.backgroundColor
-					} else {
+					} 
 						return this.dark ? '#333' : '#FFF'
-					}
+					
 				}
 				return this.backgroundColor || '#FFF'
 			},
@@ -158,9 +212,9 @@
 					// 默认值
 					if (this.color) {
 						return this.color
-					} else {
+					} 
 						return this.dark ? '#fff' : '#333'
-					}
+					
 				}
 				return this.color || '#333'
 			},
@@ -181,16 +235,16 @@
 		},
 		methods: {
 			onClickLeft() {
-				this.$emit("clickLeft");
+				this.$emit("clickLeft")
 			},
 			onClickRight() {
-				this.$emit("clickRight");
+				this.$emit("clickRight")
 			},
 			onClickTitle() {
-				this.$emit("clickTitle");
+				this.$emit("clickTitle")
 			}
 		}
-	};
+	}
 </script>
 
 <style lang="scss" scoped>

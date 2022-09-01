@@ -2,8 +2,13 @@
   <view class="my-userInfo-container">
     <!-- 头像和昵称区域 -->
     <view class="top-box">
-      <image :src="userInfo!.avatarUrl" class="avatar" />
-      <view class="nickname">{{ userInfo!.nickName }}</view>
+      <image
+        :src="userInfo!.avatarUrl"
+        class="avatar"
+      />
+      <view class="nickname">
+        {{ userInfo!.nickName }}
+      </view>
     </view>
 
     <!-- 面板区域 -->
@@ -36,19 +41,31 @@
         </view>
         <view class="panel-body">
           <view class="panel-item">
-            <image src="/static/my-icons/icon1.png" class="icon"/>
+            <image
+              src="/static/my-icons/icon1.png"
+              class="icon"
+            />
             <text>代付款</text>
           </view>
           <view class="panel-item">
-            <image src="/static/my-icons/icon2.png" class="icon"/>
+            <image
+              src="/static/my-icons/icon2.png"
+              class="icon"
+            />
             <text>待收货</text>
           </view>
           <view class="panel-item">
-            <image src="/static/my-icons/icon3.png" class="icon"/>
+            <image
+              src="/static/my-icons/icon3.png"
+              class="icon"
+            />
             <text>退款/退货</text>
           </view>
           <view class="panel-item">
-            <image src="/static/my-icons/icon4.png" class="icon"/>
+            <image
+              src="/static/my-icons/icon4.png"
+              class="icon"
+            />
             <text>全部订单</text>
           </view>
         </view>
@@ -70,7 +87,10 @@
             size="15"
           />
         </view>
-        <view class="panel-list-item" @click="logout">
+        <view
+          class="panel-list-item"
+          @click="logout"
+        >
           <text>退出登录</text>
           <uni-icons
             type="arrowright"
@@ -83,28 +103,29 @@
 </template>
 
 <script lang="ts" setup>
-import { useAddress } from "@/store/address";
-import { storeToRefs } from "pinia";
-import {showMsg, useShowModal} from '@/utils/hooks'
-import UniIcons from '@/components/uni-icons/uni-icons.vue'
+import { storeToRefs } from "pinia"
 
-const store=useAddress()
-const { userInfo } = storeToRefs(store);
+import UniIcons from '@/components/uni-icons/uni-icons.vue'
+import { useAddress } from "@/store/address"
+import {showMsg, useShowModal} from '@/utils/hooks'
+
+const store = useAddress()
+const { userInfo } = storeToRefs(store)
 
 //退出功能
-const logout=async ()=>{
+const logout = async () => {
   try {
-    const res=await useShowModal({
+    const res = await useShowModal({
       title:'提示',
       content:'确认退出登录吗？'
     })
     if(res.cancel)return showMsg('取消退出成功！')
-    if(res.confirm){
+    if(res.confirm) {
       //重置数据
-      store.token=''
-      store.userInfo={} as any
+      store.token = ''
+      store.userInfo = {} as any
       store.setUserInfo({} as any)
-      store.address={} as any
+      store.address = {} as any
       store.setAddressStorage({} as any)
       uni.setStorageSync('token','')
     }

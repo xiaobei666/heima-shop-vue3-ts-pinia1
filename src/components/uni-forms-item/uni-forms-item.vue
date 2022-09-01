@@ -1,30 +1,62 @@
 <template>
-	<view class="uni-forms-item" :class="{ 'uni-forms-item--border': border, 'is-first-border': border && isFirstBorder, 'uni-forms-item-error': msg }">
-		<view class="uni-forms-item__box">
-			<view class="uni-forms-item__inner" :class="['is-direction-' + labelPos]">
-				<view class="uni-forms-item__label" :style="{ width: labelWid , justifyContent: justifyContent }">
-					<slot name="label">
-						<text v-if="required" class="is-required">*</text>
-						<uni-icons v-if="leftIcon" class="label-icon" size="16" :type="leftIcon" :color="iconColor" />
-						<text class="label-text">{{ label }}</text>
+  <view
+    class="uni-forms-item"
+    :class="{ 'uni-forms-item--border': border, 'is-first-border': border && isFirstBorder, 'uni-forms-item-error': msg }"
+  >
+    <view class="uni-forms-item__box">
+      <view
+        class="uni-forms-item__inner"
+        :class="['is-direction-' + labelPos]"
+      >
+        <view
+          class="uni-forms-item__label"
+          :style="{ width: labelWid , justifyContent: justifyContent }"
+        >
+          <slot name="label">
+            <text
+              v-if="required"
+              class="is-required"
+            >
+              *
+            </text>
+            <uni-icons
+              v-if="leftIcon"
+              class="label-icon"
+              size="16"
+              :type="leftIcon"
+              :color="iconColor"
+            />
+            <text class="label-text">
+              {{ label }}
+            </text>
 
-						<view v-if="label" class="label-seat"></view>
-					</slot>
-				</view>
-				<view class="uni-forms-item__content" :class="{ 'is-input-error-border': msg }"><slot></slot></view>
-			</view>
-			<view
-				v-if="msg"
-				class="uni-error-message"
-				:class="{ 'uni-error-msg--boeder': border }"
-				:style="{
-					paddingLeft: labelLeft
-				}"
-			>
-				<text class="uni-error-message-text">{{ showMsg === 'undertext' ? msg : '' }}</text>
-			</view>
-		</view>
-	</view>
+            <view
+              v-if="label"
+              class="label-seat"
+            />
+          </slot>
+        </view>
+        <view
+          class="uni-forms-item__content"
+          :class="{ 'is-input-error-border': msg }"
+        >
+          <slot />
+        </view>
+      </view>
+      <view
+        v-if="msg"
+        class="uni-error-message"
+        :class="{ 'uni-error-msg--boeder': border }"
+        :style="{
+          paddingLeft: labelLeft
+        }"
+      >
+        <text class="uni-error-message-text">
+          {{ showMsg === 'undertext' ? msg : '' }}
+        </text>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -52,7 +84,7 @@
  */
 
 export default {
-	name: 'uniFormsItem',
+	name: 'UniFormsItem',
 	props: {
 		// 自定义内容
 		custom: {
@@ -99,7 +131,7 @@ export default {
 		rules: {
 			type: Array,
 			default() {
-				return [];
+				return []
 			}
 		}
 	},
@@ -119,56 +151,56 @@ export default {
 			isFirstBorder: false,
 			isArray: false,
 			arrayField: ''
-		};
+		}
 	},
 	computed: {
 		msg() {
-			return this.errorMessage || this.errMsg;
+			return this.errorMessage || this.errMsg
 		},
 		fieldStyle() {
-			let style = {};
+			const style = {}
 			if (this.labelPos == 'top') {
-				style.padding = '0 0';
-				this.labelMarginBottom = '6px';
+				style.padding = '0 0'
+				this.labelMarginBottom = '6px'
 			}
 			if (this.labelPos == 'left' && this.msg !== false && this.msg != '') {
-				style.paddingBottom = '0px';
-				this.errorBottom = true;
-				this.errorTop = false;
+				style.paddingBottom = '0px'
+				this.errorBottom = true
+				this.errorTop = false
 			} else if (this.labelPos == 'top' && this.msg !== false && this.msg != '') {
-				this.errorBottom = false;
-				this.errorTop = true;
+				this.errorBottom = false
+				this.errorTop = true
 			} else {
 				// style.paddingBottom = ''
-				this.errorTop = false;
-				this.errorBottom = false;
+				this.errorTop = false
+				this.errorBottom = false
 			}
-			return style;
+			return style
 		},
 
 		// uni不支持在computed中写style.justifyContent = 'center'的形式，故用此方法
 		justifyContent() {
-			if (this.labelAli === 'left') return 'flex-start';
-			if (this.labelAli === 'center') return 'center';
-			if (this.labelAli === 'right') return 'flex-end';
+			if (this.labelAli === 'left') return 'flex-start'
+			if (this.labelAli === 'center') return 'center'
+			if (this.labelAli === 'right') return 'flex-end'
 		},
-		labelLeft(){
+		labelLeft() {
 			return (this.labelPos === 'left' ? parseInt(this.labelWid) : 0) + 'px'
 		}
 	},
 	watch: {
 		validateTrigger(trigger) {
-			this.formTrigger = trigger;
+			this.formTrigger = trigger
 		}
 	},
 	created() {
-		this.form = this.getForm();
-		this.group = this.getForm('uniGroup');
-		this.formRules = [];
-		this.formTrigger = this.validateTrigger;
+		this.form = this.getForm()
+		this.group = this.getForm('uniGroup')
+		this.formRules = []
+		this.formTrigger = this.validateTrigger
 		// 处理 name，是否数组
 		if (this.name && this.name.indexOf('[') !== -1 && this.name.indexOf(']') !== -1) {
-			this.isArray = true;
+			this.isArray = true
 			this.arrayField = this.name
 			// fix by mehaotian 修改不修改的情况，动态值不检验的问题
 			this.form.formData[this.name] = this.form._getValue(this.name, '')
@@ -176,18 +208,18 @@ export default {
 	},
 	mounted() {
 		if (this.form) {
-			this.form.childrens.push(this);
+			this.form.childrens.push(this)
 		}
-		this.init();
+		this.init()
 	},
 	// #ifndef VUE3
-	destroyed() {
+	unmounted() {
 		if(this.__isUnmounted) return
 		this.unInit()
 	},
 	// #endif
 	// #ifdef VUE3
-	unmounted(){
+	unmounted() {
 		this.__isUnmounted = true
 		this.unInit()
 	},
@@ -195,36 +227,36 @@ export default {
 	methods: {
 		init() {
 			if (this.form) {
-				let { formRules, validator, formData, value, labelPosition, labelWidth, labelAlign, errShowType } = this.form;
-				this.labelPos = this.labelPosition ? this.labelPosition : labelPosition;
+				const { formRules, validator, formData, value, labelPosition, labelWidth, labelAlign, errShowType } = this.form
+				this.labelPos = this.labelPosition ? this.labelPosition : labelPosition
 
-				if(this.label){
-					this.labelWid = (this.labelWidth ? this.labelWidth : (labelWidth||70))
+				if(this.label) {
+					this.labelWid = (this.labelWidth ? this.labelWidth : (labelWidth || 70))
 				}else{
-					this.labelWid =( this.labelWidth ? this.labelWidth : (labelWidth||'auto'))
+					this.labelWid = (this.labelWidth ? this.labelWidth : (labelWidth || 'auto'))
 				}
-				if(this.labelWid && this.labelWid !=='auto') {
-					this.labelWid +='px'
+				if(this.labelWid && this.labelWid !== 'auto') {
+					this.labelWid += 'px'
 				}
-				this.labelAli = this.labelAlign ? this.labelAlign : labelAlign;
+				this.labelAli = this.labelAlign ? this.labelAlign : labelAlign
 
 				// 判断第一个 item
 				if (!this.form.isFirstBorder) {
-					this.form.isFirstBorder = true;
-					this.isFirstBorder = true;
+					this.form.isFirstBorder = true
+					this.isFirstBorder = true
 				}
 
 				// 判断 group 里的第一个 item
 				if (this.group) {
 					if (!this.group.isFirstBorder) {
-						this.group.isFirstBorder = true;
-						this.isFirstBorder = true;
+						this.group.isFirstBorder = true
+						this.isFirstBorder = true
 					}
 				}
 
-				this.border = this.form.border;
-				this.showMsg = errShowType;
-				let name = this.isArray ? this.arrayField : this.name;
+				this.border = this.form.border
+				this.showMsg = errShowType
+				const name = this.isArray ? this.arrayField : this.name
 				if(!name) return
 				if (formRules && this.rules.length > 0) {
 					if (!formRules[name]) {
@@ -232,17 +264,17 @@ export default {
 							rules: this.rules
 						}
 					}
-					validator.updateSchema(formRules);
+					validator.updateSchema(formRules)
 				}
-				this.formRules = formRules[name] || {};
-				this.validator = validator;
+				this.formRules = formRules[name] || {}
+				this.validator = validator
 			} else {
-				this.labelPos = this.labelPosition || 'left';
-				this.labelWid = this.labelWidth || 65;
-				this.labelAli = this.labelAlign || 'left';
+				this.labelPos = this.labelPosition || 'left'
+				this.labelWid = this.labelWidth || 65
+				this.labelAli = this.labelAlign || 'left'
 			}
 		},
-		unInit(){
+		unInit() {
 			if (this.form) {
 				this.form.childrens.forEach((item, index) => {
 					if (item === this) {
@@ -256,34 +288,34 @@ export default {
 		 * 获取父元素实例
 		 */
 		getForm(name = 'uniForms') {
-			let parent = this.$parent;
-			let parentName = parent.$options.name;
+			let parent = this.$parent
+			let parentName = parent.$options.name
 			while (parentName !== name) {
-				parent = parent.$parent;
-				if (!parent) return false;
-				parentName = parent.$options.name;
+				parent = parent.$parent
+				if (!parent) return false
+				parentName = parent.$options.name
 			}
-			return parent;
+			return parent
 		},
 
 		/**
 		 * 移除该表单项的校验结果
 		 */
 		clearValidate() {
-			this.errMsg = '';
+			this.errMsg = ''
 		},
 		/**
 		 * 子组件调用，如 easyinput
 		 * @param {Object} value
 		 */
 		setValue(value) {
-			let name = this.isArray ? this.arrayField : this.name;
+			const name = this.isArray ? this.arrayField : this.name
 			if (name) {
-				if (this.errMsg) this.errMsg = '';
+				if (this.errMsg) this.errMsg = ''
 				// 给组件赋值
-				this.form.formData[name] = this.form._getValue(name, value);
-				if (!this.formRules || (typeof this.formRules && JSON.stringify(this.formRules) === '{}')) return;
-				this.triggerCheck(this.form._getValue(this.name, value));
+				this.form.formData[name] = this.form._getValue(name, value)
+				if (!this.formRules || (typeof this.formRules && JSON.stringify(this.formRules) === '{}')) return
+				this.triggerCheck(this.form._getValue(this.name, value))
 			}
 		},
 
@@ -292,94 +324,92 @@ export default {
 		 * @param {Object} value
 		 */
 		async triggerCheck(value,formTrigger) {
-			let promise = null;
-			this.errMsg = '';
+			const promise = null
+			this.errMsg = ''
 			// fix by mehaotian 解决没有检验规则的情况下，抛出错误的问题
-			if (!this.validator || Object.keys(this.formRules).length === 0) return;
-			const isNoField = this.isRequired(this.formRules.rules || []);
-			let isTrigger = this.isTrigger(this.formRules.validateTrigger, this.validateTrigger, this.form.validateTrigger);
-			let result = null;
+			if (!this.validator || Object.keys(this.formRules).length === 0) return
+			const isNoField = this.isRequired(this.formRules.rules || [])
+			const isTrigger = this.isTrigger(this.formRules.validateTrigger, this.validateTrigger, this.form.validateTrigger)
+			let result = null
 			if (!!isTrigger || formTrigger) {
-				let name = this.isArray ? this.arrayField : this.name;
+				const name = this.isArray ? this.arrayField : this.name
 				result = await this.validator.validateUpdate(
 					{
 						[name]: value
 					},
 					this.form.formData
-				);
+				)
 			}
 			// 判断是否必填,非必填，不填不校验，填写才校验
 			if (!isNoField && (value === undefined || value === '')) {
-				result = null;
+				result = null
 			}
-			const inputComp = this.form.inputChildrens.find(child => child.rename === this.name);
+			const inputComp = this.form.inputChildrens.find(child => child.rename === this.name)
 			if ((isTrigger ||　formTrigger) && result && result.errorMessage) {
 				if (inputComp) {
-					inputComp.errMsg = result.errorMessage;
+					inputComp.errMsg = result.errorMessage
 				}
 				if (this.form.errShowType === 'toast') {
 					uni.showToast({
 						title: result.errorMessage || '校验错误',
 						icon: 'none'
-					});
+					})
 				}
 				if (this.form.errShowType === 'modal') {
 					uni.showModal({
 						title: '提示',
 						content: result.errorMessage || '校验错误'
-					});
+					})
 				}
-			} else {
-				if (inputComp) {
-					inputComp.errMsg = '';
+			} else if (inputComp) {
+					inputComp.errMsg = ''
 				}
-			}
 
-			this.errMsg = !result ? '' : result.errorMessage;
+			this.errMsg = !result ? '' : result.errorMessage
 			// 触发validate事件
-			this.form.validateCheck(result ? result : null);
+			this.form.validateCheck(result ? result : null)
 			// typeof callback === 'function' && callback(result ? result : null);
 			// if (promise) return promise
-			return result ? result : null;
+			return result ? result : null
 		},
 		/**
 		 * 触发时机
 		 * @param {Object} event
 		 */
 		isTrigger(rule, itemRlue, parentRule) {
-			let rl = true;
+			const rl = true
 			//  bind  submit
 			if (rule === 'submit' || !rule) {
 				if (rule === undefined) {
 					if (itemRlue !== 'bind') {
 						if (!itemRlue) {
-							return parentRule === 'bind' ? true : false;
+							return parentRule === 'bind' ? true : false
 						}
-						return false;
+						return false
 					}
-					return true;
+					return true
 				}
-				return false;
+				return false
 			}
-			return true;
+			return true
 		},
 		// 是否有必填字段
 		isRequired(rules) {
-			let isNoField = false;
+			let isNoField = false
 			for (let i = 0; i < rules.length; i++) {
-				const ruleData = rules[i];
+				const ruleData = rules[i]
 				if (ruleData.required) {
-					isNoField = true;
-					break;
+					isNoField = true
+					break
 				}
 			}
-			return isNoField;
+			return isNoField
 		}
 	}
-};
+}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .uni-forms-item {
 	position: relative;
 	padding: 0px;

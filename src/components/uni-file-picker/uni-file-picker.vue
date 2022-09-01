@@ -1,25 +1,56 @@
 <template>
-	<view class="uni-file-picker">
-		<view v-if="title" class="uni-file-picker__header">
-			<text class="file-title">{{ title }}</text>
-			<text class="file-count">{{ filesList.length }}/{{ limitLength }}</text>
-		</view>
-		<upload-image v-if="fileMediatype === 'image' && showType === 'grid'" :readonly="readonly"
-			:image-styles="imageStyles" :files-list="filesList" :limit="limitLength" :disablePreview="disablePreview"
-			:delIcon="delIcon" @uploadFiles="uploadFiles" @choose="choose" @delFile="delFile">
-			<slot>
-				<view class="is-add">
-					<view class="icon-add"></view>
-					<view class="icon-add rotate"></view>
-				</view>
-			</slot>
-		</upload-image>
-		<upload-file v-if="fileMediatype !== 'image' || showType !== 'grid'" :readonly="readonly"
-			:list-styles="listStyles" :files-list="filesList" :showType="showType" :delIcon="delIcon"
-			@uploadFiles="uploadFiles" @choose="choose" @delFile="delFile">
-			<slot><button type="primary" size="mini">选择文件</button></slot>
-		</upload-file>
-	</view>
+  <view class="uni-file-picker">
+    <view
+      v-if="title"
+      class="uni-file-picker__header"
+    >
+      <text class="file-title">
+        {{ title }}
+      </text>
+      <text class="file-count">
+        {{ filesList.length }}/{{ limitLength }}
+      </text>
+    </view>
+    <upload-image
+      v-if="fileMediatype === 'image' && showType === 'grid'"
+      :readonly="readonly"
+      :image-styles="imageStyles"
+      :files-list="filesList"
+      :limit="limitLength"
+      :disable-preview="disablePreview"
+      :del-icon="delIcon"
+      @uploadFiles="uploadFiles"
+      @choose="choose"
+      @delFile="delFile"
+    >
+      <slot>
+        <view class="is-add">
+          <view class="icon-add" />
+          <view class="icon-add rotate" />
+        </view>
+      </slot>
+    </upload-image>
+    <upload-file
+      v-if="fileMediatype !== 'image' || showType !== 'grid'"
+      :readonly="readonly"
+      :list-styles="listStyles"
+      :files-list="filesList"
+      :show-type="showType"
+      :del-icon="delIcon"
+      @uploadFiles="uploadFiles"
+      @choose="choose"
+      @delFile="delFile"
+    >
+      <slot>
+        <button
+          type="primary"
+          size="mini"
+        >
+          选择文件
+        </button>
+      </slot>
+    </upload-file>
+  </view>
 </template>
 
 <script>
@@ -27,16 +58,15 @@
 		chooseAndUploadFile,
 		uploadCloudFiles
 	} from './choose-and-upload-file.js'
-	import {
-		get_file_ext,
-		get_extname,
-		get_files_and_is_max,
-		get_file_info,
-		get_file_data
-	} from './utils.js'
-	import uploadImage from './upload-image.vue'
 	import uploadFile from './upload-file.vue'
-	let fileInput = null
+	import uploadImage from './upload-image.vue'
+	import {
+		get_extname,
+		get_file_data,
+		get_file_ext,
+		get_file_info,
+		get_files_and_is_max	} from './utils.js'
+	const fileInput = null
 	/**
 	 * FilePicker 文件选择上传
 	 * @description 文件选择上传组件，可以选择图片、视频等任意文件并上传到当前绑定的服务空间
@@ -79,12 +109,11 @@
 	 * @event {Function} delete 	文件从列表移除时触发
 	 */
 	export default {
-		name: 'uniFilePicker',
+		name: 'UniFilePicker',
 		components: {
 			uploadImage,
 			uploadFile
 		},
-		emits: ['select', 'success', 'fail', 'progress', 'delete', 'update:modelValue', 'input'],
 		props: {
 			// #ifdef VUE3
 			modelValue: {
@@ -184,33 +213,16 @@
 				}
 			}
 		},
+		emits: ['select', 'success', 'fail', 'progress', 'delete', 'update:modelValue', 'input'],
 		data() {
 			return {
 				files: [],
 				localValue: []
 			}
 		},
-		watch: {
-			// #ifndef VUE3
-			value: {
-				handler(newVal, oldVal) {
-					this.setValue(newVal, oldVal)
-				},
-				immediate: true
-			},
-			// #endif
-			// #ifdef VUE3
-			modelValue: {
-				handler(newVal, oldVal) {
-					this.setValue(newVal, oldVal)
-				},
-				immediate: true
-			},
-			// #endif
-		},
 		computed: {
 			filesList() {
-				let files = []
+				const files = []
 				this.files.forEach(v => {
 					files.push(v)
 				})
@@ -234,6 +246,24 @@
 				}
 				return this.limit
 			}
+		},
+		watch: {
+			// #ifndef VUE3
+			value: {
+				handler(newVal, oldVal) {
+					this.setValue(newVal, oldVal)
+				},
+				immediate: true
+			},
+			// #endif
+			// #ifdef VUE3
+			modelValue: {
+				handler(newVal, oldVal) {
+					this.setValue(newVal, oldVal)
+				},
+				immediate: true
+			},
+			// #endif
 		},
 		created() {
 			// TODO 兼容不开通服务空间的情况
@@ -272,7 +302,7 @@
 			 * 公开用户使用，继续上传
 			 */
 			upload() {
-				let files = []
+				const files = []
 				this.files.forEach((v, index) => {
 					if (v.status === 'ready' || v.status === 'error') {
 						files.push(Object.assign({}, v))
@@ -281,10 +311,10 @@
 				return this.uploadFiles(files)
 			},
 			async setValue(newVal, oldVal) {
-				const newData =  async (v) => {
+				const newData = async (v) => {
 					const reg = /cloud:\/\/([\w.]+\/?)\S*/
 					let url = ''
-					if(v.fileID){
+					if(v.fileID) {
 						url = v.fileID
 					}else{
 						url = v.url
@@ -304,17 +334,17 @@
 					}
 				} else {
 					if (!newVal) newVal = []
-					for(let i =0 ;i < newVal.length ;i++){
-						let v = newVal[i]
+					for(let i = 0 ;i < newVal.length ;i++) {
+						const v = newVal[i]
 						await newData(v)
 					}
 				}
 				this.localValue = newVal
-				if (this.form && this.formItem &&!this.is_reset) {
+				if (this.form && this.formItem && !this.is_reset) {
 					this.is_reset = false
 					this.formItem.setValue(this.localValue)
 				}
-				let filesData = Object.keys(newVal).length > 0 ? newVal : [];
+				const filesData = Object.keys(newVal).length > 0 ? newVal : []
 				this.files = [].concat(filesData)
 			},
 
@@ -386,11 +416,11 @@
 					files = res.tempFiles
 				}
 
-				let currentData = []
+				const currentData = []
 				for (let i = 0; i < files.length; i++) {
 					if (this.limitLength - this.files.length <= 0) break
 					files[i].uuid = Date.now()
-					let filedata = await get_file_data(files[i], this.fileMediatype)
+					const filedata = await get_file_data(files[i], this.fileMediatype)
 					filedata.progress = 0
 					filedata.status = 'ready'
 					this.files.push(filedata)
@@ -421,7 +451,7 @@
 					})
 					.then(result => {
 						this.setSuccessAndError(result)
-						return result;
+						return result
 					})
 					.catch(err => {
 						console.log(err)
@@ -432,10 +462,10 @@
 			 * 成功或失败
 			 */
 			async setSuccessAndError(res, fn) {
-				let successData = []
-				let errorData = []
-				let tempFilePath = []
-				let errorTempFilePath = []
+				const successData = []
+				const errorData = []
+				const tempFilePath = []
+				const errorTempFilePath = []
 				for (let i = 0; i < res.length; i++) {
 					const item = res[i]
 					const index = item.uuid ? this.files.findIndex(p => p.uuid === item.uuid) : item.index
@@ -542,7 +572,7 @@
 				let data = []
 				if (this.returnType === 'object') {
 					data = this.backObject(this.files)[0]
-					this.localValue = data?data:null
+					this.localValue = data ? data : null
 				} else {
 					data = this.backObject(this.files)
 					if (!this.localValue) {
@@ -563,7 +593,7 @@
 			 * @param {Object} files
 			 */
 			backObject(files) {
-				let newFilesData = []
+				const newFilesData = []
 				files.forEach(v => {
 					newFilesData.push({
 						extname: v.extname,
@@ -589,14 +619,14 @@
 			 * 获取父元素实例
 			 */
 			getForm(name = 'uniForms') {
-				let parent = this.$parent;
-				let parentName = parent.$options.name;
+				let parent = this.$parent
+				let parentName = parent.$options.name
 				while (parentName !== name) {
-					parent = parent.$parent;
-					if (!parent) return false;
-					parentName = parent.$options.name;
+					parent = parent.$parent
+					if (!parent) return false
+					parentName = parent.$options.name
 				}
-				return parent;
+				return parent
 			}
 		}
 	}

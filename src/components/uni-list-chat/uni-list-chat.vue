@@ -1,50 +1,93 @@
 <template>
-	<!-- #ifdef APP-NVUE -->
-	<cell>
-		<!-- #endif -->
-		<view :hover-class="!clickable && !link ? '' : 'uni-list-chat--hover'" class="uni-list-chat" @click.stop="onClick">
-			<view :class="{ 'uni-list--border': border, 'uni-list-chat--first': isFirstChild }"></view>
-			<view class="uni-list-chat__container">
-				<view class="uni-list-chat__header-warp">
-					<view v-if="avatarCircle || avatarList.length === 0" class="uni-list-chat__header" :class="{ 'header--circle': avatarCircle }">
-						<image class="uni-list-chat__header-image" :class="{ 'header--circle': avatarCircle }" :src="avatar" mode="aspectFill"></image>
-					</view>
-					<!-- 头像组 -->
-					<view v-else class="uni-list-chat__header">
-						<view v-for="(item, index) in avatarList" :key="index" class="uni-list-chat__header-box" :class="computedAvatar"
-						 :style="{ width: imageWidth + 'px', height: imageWidth + 'px' }">
-							<image class="uni-list-chat__header-image" :style="{ width: imageWidth + 'px', height: imageWidth + 'px' }" :src="item.url"
-							 mode="aspectFill"></image>
-						</view>
-					</view>
-				</view>
-				<view v-if="badgeText && badgePositon === 'left'" class="uni-list-chat__badge uni-list-chat__badge-pos" :class="[isSingle]">
-					<text class="uni-list-chat__badge-text">{{ badgeText === 'dot' ? '' : badgeText }}</text>
-				</view>
-				<view class="uni-list-chat__content">
-					<view class="uni-list-chat__content-main">
-						<text class="uni-list-chat__content-title uni-ellipsis">{{ title }}</text>
-						<text class="uni-list-chat__content-note uni-ellipsis">{{ note }}</text>
-					</view>
-					<view class="uni-list-chat__content-extra">
-						<slot>
-							<text class="uni-list-chat__content-extra-text">{{ time }}</text>
-							<view v-if="badgeText && badgePositon === 'right'" class="uni-list-chat__badge" :class="[isSingle, badgePositon === 'right' ? 'uni-list-chat--right' : '']">
-								<text class="uni-list-chat__badge-text">{{ badgeText === 'dot' ? '' : badgeText }}</text>
-							</view>
-						</slot>
-					</view>
-				</view>
-			</view>
-		</view>
-		<!-- #ifdef APP-NVUE -->
-	</cell>
-	<!-- #endif -->
+  <!-- #ifdef APP-NVUE -->
+  <cell>
+    <!-- #endif -->
+    <view
+      :hover-class="!clickable && !link ? '' : 'uni-list-chat--hover'"
+      class="uni-list-chat"
+      @click.stop="onClick"
+    >
+      <view :class="{ 'uni-list--border': border, 'uni-list-chat--first': isFirstChild }" />
+      <view class="uni-list-chat__container">
+        <view class="uni-list-chat__header-warp">
+          <view
+            v-if="avatarCircle || avatarList.length === 0"
+            class="uni-list-chat__header"
+            :class="{ 'header--circle': avatarCircle }"
+          >
+            <image
+              class="uni-list-chat__header-image"
+              :class="{ 'header--circle': avatarCircle }"
+              :src="avatar"
+              mode="aspectFill"
+            />
+          </view>
+          <!-- 头像组 -->
+          <view
+            v-else
+            class="uni-list-chat__header"
+          >
+            <view
+              v-for="(item, index) in avatarList"
+              :key="index"
+              class="uni-list-chat__header-box"
+              :class="computedAvatar"
+              :style="{ width: imageWidth + 'px', height: imageWidth + 'px' }"
+            >
+              <image
+                class="uni-list-chat__header-image"
+                :style="{ width: imageWidth + 'px', height: imageWidth + 'px' }"
+                :src="item.url"
+                mode="aspectFill"
+              />
+            </view>
+          </view>
+        </view>
+        <view
+          v-if="badgeText && badgePositon === 'left'"
+          class="uni-list-chat__badge uni-list-chat__badge-pos"
+          :class="[isSingle]"
+        >
+          <text class="uni-list-chat__badge-text">
+            {{ badgeText === 'dot' ? '' : badgeText }}
+          </text>
+        </view>
+        <view class="uni-list-chat__content">
+          <view class="uni-list-chat__content-main">
+            <text class="uni-list-chat__content-title uni-ellipsis">
+              {{ title }}
+            </text>
+            <text class="uni-list-chat__content-note uni-ellipsis">
+              {{ note }}
+            </text>
+          </view>
+          <view class="uni-list-chat__content-extra">
+            <slot>
+              <text class="uni-list-chat__content-extra-text">
+                {{ time }}
+              </text>
+              <view
+                v-if="badgeText && badgePositon === 'right'"
+                class="uni-list-chat__badge"
+                :class="[isSingle, badgePositon === 'right' ? 'uni-list-chat--right' : '']"
+              >
+                <text class="uni-list-chat__badge-text">
+                  {{ badgeText === 'dot' ? '' : badgeText }}
+                </text>
+              </view>
+            </slot>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- #ifdef APP-NVUE -->
+  </cell>
+  <!-- #endif -->
 </template>
 
 <script>
 	// 头像大小
-	const avatarWidth = 45;
+	const avatarWidth = 45
 
 	/**
 	 * ListChat 聊天列表
@@ -70,7 +113,6 @@
 	 */
 	export default {
 		name: 'UniListChat',
-		emits:['click'],
 		props: {
 			title: {
 				type: String,
@@ -115,53 +157,54 @@
 			avatarList: {
 				type: Array,
 				default () {
-					return [];
+					return []
 				}
 			}
 		},
-		// inject: ['list'],
-		computed: {
-			isSingle() {
-				if (this.badgeText === 'dot') {
-					return 'uni-badge--dot';
-				} else {
-					const badgeText = this.badgeText.toString();
-					if (badgeText.length > 1) {
-						return 'uni-badge--complex';
-					} else {
-						return 'uni-badge--single';
-					}
-				}
-			},
-			computedAvatar() {
-				if (this.avatarList.length > 4) {
-					this.imageWidth = avatarWidth * 0.31;
-					return 'avatarItem--3';
-				} else if (this.avatarList.length > 1) {
-					this.imageWidth = avatarWidth * 0.47;
-					return 'avatarItem--2';
-				} else {
-					this.imageWidth = avatarWidth;
-					return 'avatarItem--1';
-				}
-			}
-		},
+		emits:['click'],
 		data() {
 			return {
 				isFirstChild: false,
 				border: true,
 				// avatarList: 3,
 				imageWidth: 50
-			};
+			}
+		},
+		// inject: ['list'],
+		computed: {
+			isSingle() {
+				if (this.badgeText === 'dot') {
+					return 'uni-badge--dot'
+				} 
+					const badgeText = this.badgeText.toString()
+					if (badgeText.length > 1) {
+						return 'uni-badge--complex'
+					} 
+						return 'uni-badge--single'
+					
+				
+			},
+			computedAvatar() {
+				if (this.avatarList.length > 4) {
+					this.imageWidth = avatarWidth * 0.31
+					return 'avatarItem--3'
+				} else if (this.avatarList.length > 1) {
+					this.imageWidth = avatarWidth * 0.47
+					return 'avatarItem--2'
+				} 
+					this.imageWidth = avatarWidth
+					return 'avatarItem--1'
+				
+			}
 		},
 		mounted() {
 			this.list = this.getForm()
 			if (this.list) {
 				if (!this.list.firstChildAppend) {
-					this.list.firstChildAppend = true;
-					this.isFirstChild = true;
+					this.list.firstChildAppend = true
+					this.isFirstChild = true
 				}
-				this.border = this.list.border;
+				this.border = this.list.border
 			}
 		},
 		methods: {
@@ -169,32 +212,32 @@
 			 * 获取父元素实例
 			 */
 			getForm(name = 'uniList') {
-				let parent = this.$parent;
-				let parentName = parent.$options.name;
+				let parent = this.$parent
+				let parentName = parent.$options.name
 				while (parentName !== name) {
-					parent = parent.$parent;
+					parent = parent.$parent
 					if (!parent) return false
-					parentName = parent.$options.name;
+					parentName = parent.$options.name
 				}
-				return parent;
+				return parent
 			},
 			onClick() {
 				if (this.to !== '') {
-					this.openPage();
-					return;
+					this.openPage()
+					return
 				}
 
 				if (this.clickable || this.link) {
 					this.$emit('click', {
 						data: {}
-					});
+					})
 				}
 			},
 			openPage() {
 				if (['navigateTo', 'redirectTo', 'reLaunch', 'switchTab'].indexOf(this.link) !== -1) {
-					this.pageApi(this.link);
+					this.pageApi(this.link)
 				} else {
-					this.pageApi('navigateTo');
+					this.pageApi('navigateTo')
 				}
 			},
 			pageApi(api) {
@@ -203,21 +246,21 @@
 					success: res => {
 						this.$emit('click', {
 							data: res
-						});
+						})
 					},
 					fail: err => {
 						this.$emit('click', {
 							data: err
-						});
-						console.error(err.errMsg);
+						})
+						console.error(err.errMsg)
 					}
-				});
+				})
 			}
 		}
-	};
+	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	$uni-font-size-lg:16px;
 	$uni-spacing-row-sm: 5px;
 	$uni-spacing-row-base: 10px;

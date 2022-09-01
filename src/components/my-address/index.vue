@@ -2,51 +2,75 @@
   <view>
     <!-- 选择收货地址盒子 -->
     
-    <view class="address-choose-box" v-if="JSON.stringify(addStore.address)==='{}'">
-      <button size="mini" @click="chooseClickHandle" class="btnChooseAddress">选择收货地址+</button>
+    <view
+      v-if="JSON.stringify(addStore.address)==='{}'"
+      class="address-choose-box"
+    >
+      <button
+        size="mini"
+        class="btnChooseAddress"
+        @click="chooseClickHandle"
+      >
+        选择收货地址+
+      </button>
     </view>
     <!-- 渲染收货地址的盒子 -->
     <!-- 给盒子绑定点击事件重新选择收货地址 -->
-    <view class="address-info-box" v-else @click="chooseClickHandle">
+    <view
+      v-else
+      class="address-info-box"
+      @click="chooseClickHandle"
+    >
       <view class="row1">
         <view class="row1-left">
-          <view class="username"
-            >收货人：<text>{{ addStore.address!.userName}}</text></view
-          >
+          <view class="username">
+            收货人：<text>{{ addStore.address!.userName }}</text>
+          </view>
         </view>
         <view class="row1-right">
-          <view class="phone"
-            >电话：<text>{{ addStore.address!.telNumber }}</text></view
-          >
-          <uni-icons type="arrowright" size="16"></uni-icons>
+          <view class="phone">
+            电话：<text>{{ addStore.address!.telNumber }}</text>
+          </view>
+          <uni-icons
+            type="arrowright"
+            size="16"
+          />
         </view>
       </view>
       <view class="row2">
-        <view class="row2-left">收货地址：</view>
-        <view class="row2-right">{{ addStore.addstr }}</view>
+        <view class="row2-left">
+          收货地址：
+        </view>
+        <view class="row2-right">
+          {{ addStore.addstr }}
+        </view>
       </view>
     </view>
     <!-- 底部边框线 -->
-    <image src="@/static/cart_border@2x.png" class="address-border" />
+    <image
+      src="@/static/cart_border@2x.png"
+      class="address-border"
+    />
   </view>
 </template>
 
 <script lang="ts" setup>
-import UniIcons from "@/components/uni-icons/uni-icons.vue";
-import { computed, reactive } from "vue";
-import {showMsg, useChooseAddress,useShowModal} from '@/utils/hooks'
-import {useAddress} from '@/store/address'
-import { onReady } from "@dcloudio/uni-app";
+import { onReady } from "@dcloudio/uni-app"
+import { computed, reactive } from "vue"
 
-const addStore=useAddress()
+import UniIcons from "@/components/uni-icons/uni-icons.vue"
+import {useAddress} from '@/store/address'
+import {showMsg, useChooseAddress,useShowModal} from '@/utils/hooks'
+
+const addStore = useAddress()
 /* const data=reactive({
   address:<UniApp.ChooseAddressRes>{}
 }) */
 //解决授权问题
 //重新授权函数
-const reAuth=async ()=>{
+const reAuth = async () => {
   try {
-    const res=await useShowModal({
+    const res = await useShowModal({
       content:'检测到您没打开地址权限，是否去设置打开？',    
       confirmText:'确认',
       cancelText:'取消'
@@ -66,16 +90,16 @@ const reAuth=async ()=>{
 
   } catch (error) {
     //检测异常直接退出
-    return
+    
   }
 }
 //点击添加收货地址响应函数
-const chooseClickHandle=async ()=>{
+const chooseClickHandle = async () => {
   try {
-    const res=await useChooseAddress()
-    if(res.errMsg=='chooseAddress:ok'){
+    const res = await useChooseAddress()
+    if(res.errMsg == 'chooseAddress:ok') {
       /* data.address=res */
-      addStore.address=res
+      addStore.address = res
     }else{
       //重新获取权限
       reAuth()
@@ -96,10 +120,9 @@ const chooseClickHandle=async ()=>{
 }) */
 
 //监听变化持久化存储
-addStore.$subscribe(()=>{
+addStore.$subscribe(() => {
   addStore.setAddressStorage(addStore.address)
 },{detached:true})
-
 
 
 </script>

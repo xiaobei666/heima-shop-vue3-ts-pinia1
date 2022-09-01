@@ -17,13 +17,13 @@ export const useStore = defineStore('shop', {
       }
     },
     //实现全选功能
-    FullCheckOrNo(newState:boolean){
-      this.cart.forEach(x=>x.goods_state=newState)
+    FullCheckOrNo(newState:boolean) {
+      this.cart.forEach(x => x.goods_state = newState)
     }
   },
   getters: {
     total(): number {
-      return this.cart.reduce((pre,cur)=>pre+cur.goods_count,0)
+      return this.cart.reduce((pre,cur) => pre + cur.goods_count,0)
     },
     //已勾选商品总数量
     checkCount(): number {
@@ -33,17 +33,17 @@ export const useStore = defineStore('shop', {
           return pre + cur.goods_count
         }, 0)
     },
-    goodsTotal:(state):number=>{
-      return state.cart.reduce((pre,cur)=>pre+cur.goods_count,0)
+    goodsTotal:(state):number => {
+      return state.cart.reduce((pre,cur) => pre + cur.goods_count,0)
     },
     /**
      * 要么用箭头函数第一个参数就是当前store的state
      * 因为箭头函数不绑定this,
      * 要么用普通函数，可通过this拿到state，但得自己设置返回值类型
      */
-    checkGoodsAmount(state){
-      return state.cart.filter(x=>x.goods_state).reduce((pre,cur)=>{
-        return pre+cur.goods_price*cur.goods_count
+    checkGoodsAmount(state) {
+      return state.cart.filter(x => x.goods_state).reduce((pre,cur) => {
+        return pre + cur.goods_price * cur.goods_count
       },0).toFixed(2)
     }
   },

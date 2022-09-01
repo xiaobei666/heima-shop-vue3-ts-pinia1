@@ -1,50 +1,132 @@
 <template>
-	<view class="uni-data-tree">
-		<view class="uni-data-tree-input" @click="handleInput">
-			<slot :options="options" :data="inputSelected" :error="errorMessage">
-				<view class="input-value" :class="{'input-value-border': border}">
-					<text v-if="errorMessage" class="selected-area error-text">{{errorMessage}}</text>
-					<view v-else-if="loading && !isOpened" class="selected-area">
-						<uni-load-more class="load-more" :contentText="loadMore" status="loading"></uni-load-more>
-					</view>
-					<scroll-view v-else-if="inputSelected.length" class="selected-area" scroll-x="true">
-						<view class="selected-list">
-							<view class="selected-item" v-for="(item,index) in inputSelected" :key="index">
-								<text>{{item.text}}</text><text v-if="index<inputSelected.length-1"
-									class="input-split-line">{{split}}</text>
-							</view>
-						</view>
-					</scroll-view>
-					<text v-else class="selected-area placeholder">{{placeholder}}</text>
-					<view v-if="clearIcon && !readonly && inputSelected.length" class="icon-clear"
-						@click.stop="clear">
-						<uni-icons type="clear" color="#e1e1e1" size="14"></uni-icons>
-					</view>
-					<view class="arrow-area" v-if="(!clearIcon || !inputSelected.length) && !readonly ">
-						<view class="input-arrow"></view>
-					</view>
-				</view>
-			</slot>
-		</view>
-		<view class="uni-data-tree-cover" v-if="isOpened" @click="handleClose"></view>
-		<view class="uni-data-tree-dialog" v-if="isOpened">
-			<view class="uni-popper__arrow"></view>
-			<view class="dialog-caption">
-				<view class="title-area">
-					<text class="dialog-title">{{popupTitle}}</text>
-				</view>
-				<view class="dialog-close" @click="handleClose">
-					<view class="dialog-close-plus" data-id="close"></view>
-					<view class="dialog-close-plus dialog-close-rotate" data-id="close"></view>
-				</view>
-			</view>
-			<data-picker-view class="picker-view" ref="pickerView" v-model="dataValue" :localdata="localdata"
-				:preload="preload" :collection="collection" :field="field" :orderby="orderby" :where="where"
-				:step-searh="stepSearh" :self-field="selfField" :parent-field="parentField" :managed-mode="true"
-				:map="map" :ellipsis="ellipsis" @change="onchange" @datachange="ondatachange" @nodeclick="onnodeclick">
-			</data-picker-view>
-		</view>
-	</view>
+  <view class="uni-data-tree">
+    <view
+      class="uni-data-tree-input"
+      @click="handleInput"
+    >
+      <slot
+        :options="options"
+        :data="inputSelected"
+        :error="errorMessage"
+      >
+        <view
+          class="input-value"
+          :class="{'input-value-border': border}"
+        >
+          <text
+            v-if="errorMessage"
+            class="selected-area error-text"
+          >
+            {{ errorMessage }}
+          </text>
+          <view
+            v-else-if="loading && !isOpened"
+            class="selected-area"
+          >
+            <uni-load-more
+              class="load-more"
+              :content-text="loadMore"
+              status="loading"
+            />
+          </view>
+          <scroll-view
+            v-else-if="inputSelected.length"
+            class="selected-area"
+            scroll-x="true"
+          >
+            <view class="selected-list">
+              <view
+                v-for="(item,index) in inputSelected"
+                :key="index"
+                class="selected-item"
+              >
+                <text>{{ item.text }}</text><text
+                  v-if="index<inputSelected.length-1"
+                  class="input-split-line"
+                >
+                  {{ split }}
+                </text>
+              </view>
+            </view>
+          </scroll-view>
+          <text
+            v-else
+            class="selected-area placeholder"
+          >
+            {{ placeholder }}
+          </text>
+          <view
+            v-if="clearIcon && !readonly && inputSelected.length"
+            class="icon-clear"
+            @click.stop="clear"
+          >
+            <uni-icons
+              type="clear"
+              color="#e1e1e1"
+              size="14"
+            />
+          </view>
+          <view
+            v-if="(!clearIcon || !inputSelected.length) && !readonly "
+            class="arrow-area"
+          >
+            <view class="input-arrow" />
+          </view>
+        </view>
+      </slot>
+    </view>
+    <view
+      v-if="isOpened"
+      class="uni-data-tree-cover"
+      @click="handleClose"
+    />
+    <view
+      v-if="isOpened"
+      class="uni-data-tree-dialog"
+    >
+      <view class="uni-popper__arrow" />
+      <view class="dialog-caption">
+        <view class="title-area">
+          <text class="dialog-title">
+            {{ popupTitle }}
+          </text>
+        </view>
+        <view
+          class="dialog-close"
+          @click="handleClose"
+        >
+          <view
+            class="dialog-close-plus"
+            data-id="close"
+          />
+          <view
+            class="dialog-close-plus dialog-close-rotate"
+            data-id="close"
+          />
+        </view>
+      </view>
+      <data-picker-view
+        ref="pickerView"
+        v-model="dataValue"
+        class="picker-view"
+        :localdata="localdata"
+        :preload="preload"
+        :collection="collection"
+        :field="field"
+        :orderby="orderby"
+        :where="where"
+        :step-searh="stepSearh"
+        :self-field="selfField"
+        :parent-field="parentField"
+        :managed-mode="true"
+        :map="map"
+        :ellipsis="ellipsis"
+        @change="onchange"
+        @datachange="ondatachange"
+        @nodeclick="onnodeclick"
+      />
+    </view>
+  </view>
 </template>
 
 <script>
@@ -76,11 +158,10 @@
 	 */
 	export default {
 		name: 'UniDataPicker',
-		emits: ['popupopened', 'popupclosed', 'nodeclick', 'input', 'change', 'update:modelValue'],
-		mixins: [dataPicker],
 		components: {
 			DataPickerView
 		},
+		mixins: [dataPicker],
 		props: {
 			options: {
 				type: [Object, Array],
@@ -121,6 +202,7 @@
 				default: true
 			}
 		},
+		emits: ['popupopened', 'popupclosed', 'nodeclick', 'input', 'change', 'update:modelValue'],
 		data() {
 			return {
 				isOpened: false,
@@ -171,14 +253,14 @@
 				}
 			},
 			getForm(name = 'uniForms') {
-				let parent = this.$parent;
-				let parentName = parent.$options.name;
+				let parent = this.$parent
+				let parentName = parent.$options.name
 				while (parentName !== name) {
-					parent = parent.$parent;
-					if (!parent) return false;
-					parentName = parent.$options.name;
+					parent = parent.$parent
+					if (!parent) return false
+					parentName = parent.$options.name
 				}
-				return parent;
+				return parent
 			},
 			show() {
 				this.isOpened = true
@@ -213,12 +295,12 @@
 			onchange(e) {
 				this.hide()
 				this.$nextTick(() => {
-					this.inputSelected = e;
+					this.inputSelected = e
 				})
 				this._dispatchEvent(e)
 			},
 			_processReadonly(dataList, value) {
-				var isTree = dataList.findIndex((item) => {
+				const isTree = dataList.findIndex((item) => {
 					return item.children
 				})
 				if (isTree > -1) {
@@ -240,10 +322,10 @@
 					return
 				}
 
-				let result = []
+				const result = []
 				for (let i = 0; i < value.length; i++) {
 					var val = value[i]
-					var item = dataList.find((v) => {
+					const item = dataList.find((v) => {
 						return v.value == val
 					})
 					if (item) {
@@ -255,10 +337,10 @@
 				}
 			},
 			_filterForArray(data, valueArray) {
-				var result = []
+				const result = []
 				for (let i = 0; i < valueArray.length; i++) {
 					var value = valueArray[i]
-					var found = data.find((item) => {
+					const found = data.find((item) => {
 						return item.value == value
 					})
 					if (found) {
@@ -270,8 +352,8 @@
 			_dispatchEvent(selected) {
 				let item = {}
 				if (selected.length) {
-					var value = new Array(selected.length)
-					for (var i = 0; i < selected.length; i++) {
+					const value = new Array(selected.length)
+					for (let i = 0; i < selected.length; i++) {
 						value[i] = selected[i].value
 					}
 					item = selected[selected.length - 1]
@@ -294,7 +376,7 @@
 	}
 </script>
 
-<style >
+<style>
 	.uni-data-tree {
 		position: relative;
 		font-size: 14px;

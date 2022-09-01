@@ -1,15 +1,18 @@
 <template>
-	<view :class="[ 'uni-row', typeClass , justifyClass, alignClass, ]" :style="{
-		marginLeft:`${Number(marginValue)}rpx`,
-		marginRight:`${Number(marginValue)}rpx`,
-	}">
-		<slot></slot>
-	</view>
+  <view
+    :class="[ 'uni-row', typeClass , justifyClass, alignClass, ]"
+    :style="{
+      marginLeft:`${Number(marginValue)}rpx`,
+      marginRight:`${Number(marginValue)}rpx`,
+    }"
+  >
+    <slot />
+  </view>
 </template>
 
 <script>
-	const ComponentClass = 'uni-row';
-	const modifierSeparator = '--';
+	const ComponentClass = 'uni-row'
+	const modifierSeparator = '--'
 	/**
 	 * Row	布局-行
 	 * @description	流式栅格系统，随着屏幕或视口分为 24 份，可以迅速简便地创建布局。
@@ -28,7 +31,7 @@
 
 
 	export default {
-		name: 'uniRow',
+		name: 'UniRow',
 		componentName: 'uniRow',
 		// #ifdef MP-WEIXIN
 		options: {
@@ -52,22 +55,17 @@
 				default: 750
 			}
 		},
-		created() {
-			// #ifdef APP-NVUE
-			this.type = 'flex';
-			// #endif
-		},
 		computed: {
 			marginValue() {
 				// #ifndef APP-NVUE
 				if (this.gutter) {
-					return -(this.gutter / 2);
+					return -(this.gutter / 2)
 				}
 				// #endif
-				return 0;
+				return 0
 			},
 			typeClass() {
-				return this.type === 'flex' ? `${ComponentClass + modifierSeparator}flex` : '';
+				return this.type === 'flex' ? `${ComponentClass + modifierSeparator}flex` : ''
 			},
 			justifyClass() {
 				return this.justify !== 'start' ? `${ComponentClass + modifierSeparator}flex-justify-${this.justify}` : ''
@@ -75,8 +73,13 @@
 			alignClass() {
 				return this.align !== 'top' ? `${ComponentClass + modifierSeparator}flex-align-${this.align}` : ''
 			}
+		},
+		created() {
+			// #ifdef APP-NVUE
+			this.type = 'flex'
+			// #endif
 		}
-	};
+	}
 </script>
 
 <style lang="scss">

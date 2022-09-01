@@ -1,19 +1,46 @@
 <template>
-	<view v-if="showPopup" class="uni-popup" :class="[popupstyle, isDesktop ? 'fixforpc-z-index' : '']">
-		<view @touchstart="touchstart">
-			<uni-transition key="1" v-if="maskShow" name="mask" mode-class="fade" :styles="maskClass"
-				:duration="duration" :show="showTrans" @click="onTap" />
-			<uni-transition key="2" :mode-class="ani" name="content" :styles="transClass" :duration="duration"
-				:show="showTrans" @click="onTap">
-				<view class="uni-popup__wrapper" :style="{ backgroundColor: bg }" :class="[popupstyle]" @click="clear">
-					<slot />
-				</view>
-			</uni-transition>
-		</view>
-		<!-- #ifdef H5 -->
-		<keypress v-if="maskShow" @esc="onTap" />
-		<!-- #endif -->
-	</view>
+  <view
+    v-if="showPopup"
+    class="uni-popup"
+    :class="[popupstyle, isDesktop ? 'fixforpc-z-index' : '']"
+  >
+    <view @touchstart="touchstart">
+      <uni-transition
+        v-if="maskShow"
+        key="1"
+        name="mask"
+        mode-class="fade"
+        :styles="maskClass"
+        :duration="duration"
+        :show="showTrans"
+        @click="onTap"
+      />
+      <uni-transition
+        key="2"
+        :mode-class="ani"
+        name="content"
+        :styles="transClass"
+        :duration="duration"
+        :show="showTrans"
+        @click="onTap"
+      >
+        <view
+          class="uni-popup__wrapper"
+          :style="{ backgroundColor: bg }"
+          :class="[popupstyle]"
+          @click="clear"
+        >
+          <slot />
+        </view>
+      </uni-transition>
+    </view>
+    <!-- #ifdef H5 -->
+    <keypress
+      v-if="maskShow"
+      @esc="onTap"
+    />
+    <!-- #endif -->
+  </view>
 </template>
 
 <script>
@@ -45,13 +72,12 @@
 	 */
 
 	export default {
-		name: 'uniPopup',
+		name: 'UniPopup',
 		components: {
 			// #ifdef H5
 			keypress
 			// #endif
 		},
-		emits: ['change', 'maskClick'],
 		props: {
 			// 开启动画
 			animation: {
@@ -87,49 +113,7 @@
 				default: 'rgba(0, 0, 0, 0.4)'
 			},
 		},
-
-		watch: {
-			/**
-			 * 监听type类型
-			 */
-			type: {
-				handler: function(type) {
-					if (!this.config[type]) return
-					this[this.config[type]](true)
-				},
-				immediate: true
-			},
-			isDesktop: {
-				handler: function(newVal) {
-					if (!this.config[newVal]) return
-					this[this.config[this.type]](true)
-				},
-				immediate: true
-			},
-			/**
-			 * 监听遮罩是否可点击
-			 * @param {Object} val
-			 */
-			maskClick: {
-				handler: function(val) {
-					this.mkclick = val
-				},
-				immediate: true
-			},
-			isMaskClick: {
-				handler: function(val) {
-					this.mkclick = val
-				},
-				immediate: true
-			},
-			// H5 下禁止底部滚动
-			showPopup(show) {
-				// #ifdef H5
-				// fix by mehaotian 处理 h5 滚动穿透的问题
-				document.getElementsByTagName('body')[0].style.overflow = show ? 'hidden' : 'visible'
-				// #endif
-			}
-		},
+		emits: ['change', 'maskClick'],
 		data() {
 			return {
 				duration: 300,
@@ -177,6 +161,49 @@
 				return this.backgroundColor
 			}
 		},
+
+		watch: {
+			/**
+			 * 监听type类型
+			 */
+			type: {
+				handler: function(type) {
+					if (!this.config[type]) return
+					this[this.config[type]](true)
+				},
+				immediate: true
+			},
+			isDesktop: {
+				handler: function(newVal) {
+					if (!this.config[newVal]) return
+					this[this.config[this.type]](true)
+				},
+				immediate: true
+			},
+			/**
+			 * 监听遮罩是否可点击
+			 * @param {Object} val
+			 */
+			maskClick: {
+				handler: function(val) {
+					this.mkclick = val
+				},
+				immediate: true
+			},
+			isMaskClick: {
+				handler: function(val) {
+					this.mkclick = val
+				},
+				immediate: true
+			},
+			// H5 下禁止底部滚动
+			showPopup(show) {
+				// #ifdef H5
+				// fix by mehaotian 处理 h5 滚动穿透的问题
+				document.getElementsByTagName('body')[0].style.overflow = show ? 'hidden' : 'visible'
+				// #endif
+			}
+		},
 		mounted() {
 			const fixSize = () => {
 				const {
@@ -211,7 +238,7 @@
 		},
 		// #ifndef VUE3
 		// TODO vue2
-		destroyed() {
+		unmounted() {
 			this.setH5Visible()
 		},
 		// #endif
@@ -272,7 +299,7 @@
 					clearTimeout(this.timer)
 					this.showPopup = false
 				}
-				let innerType = ['top', 'center', 'bottom', 'left', 'right', 'message', 'dialog', 'share']
+				const innerType = ['top', 'center', 'bottom', 'left', 'right', 'message', 'dialog', 'share']
 				if (!(direction && innerType.indexOf(direction) !== -1)) {
 					direction = this.type
 				}

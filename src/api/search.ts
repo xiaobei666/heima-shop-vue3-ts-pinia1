@@ -1,6 +1,6 @@
-import { myHttp } from "@/utils/request";
+import { myHttp } from "@/utils/request"
 
-export async function getSearchList(query:string){
+export async function getSearchList(query:string) {
   return (await myHttp.get('/goods/qsearch',{
     query
   })).data as SearchList

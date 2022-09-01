@@ -1,9 +1,16 @@
 <template>
-	<view class="uni-badge--x">
-		<slot />
-		<text v-if="text" :class="classNames" :style="[badgeWidth, positionStyle, customStyle, dotStyle]"
-			class="uni-badge" @click="onClick()">{{displayValue}}</text>
-	</view>
+  <view class="uni-badge--x">
+    <slot />
+    <text
+      v-if="text"
+      :class="classNames"
+      :style="[badgeWidth, positionStyle, customStyle, dotStyle]"
+      class="uni-badge"
+      @click="onClick()"
+    >
+      {{ displayValue }}
+    </text>
+  </view>
 </template>
 
 <script>
@@ -34,7 +41,6 @@
 
 	export default {
 		name: 'UniBadge',
-		emits: ['click'],
 		props: {
 			type: {
 				type: String,
@@ -77,8 +83,9 @@
 				}
 			}
 		},
+		emits: ['click'],
 		data() {
-			return {};
+			return {}
 		},
 		computed: {
 			width() {
@@ -106,8 +113,8 @@
 					w = 5
 					h = 5
 				}
-				const x = `${- w  + this.offset[0]}px`
-				const y = `${- h + this.offset[1]}px`
+				const x = `${-w + this.offset[0]}px`
+				const y = `${-h + this.offset[1]}px`
 
 				const whiteList = {
 					rightTop: {
@@ -128,7 +135,7 @@
 					}
 				}
 				const match = whiteList[this.absolute]
-				return match ? match : whiteList['rightTop']
+				return match ? match : whiteList.rightTop
 			},
 			badgeWidth() {
 				return {
@@ -154,13 +161,13 @@
 		},
 		methods: {
 			onClick() {
-				this.$emit('click');
+				this.$emit('click')
 			}
 		}
-	};
+	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	$uni-primary: #2979ff !default;
 	$uni-success: #4cd964 !default;
 	$uni-warning: #f0ad4e !default;

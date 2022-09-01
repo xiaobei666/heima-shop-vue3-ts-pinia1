@@ -1,9 +1,9 @@
 let bindIngXMixins = {}
 
 // #ifdef APP-NVUE
-const BindingX = uni.requireNativePlugin('bindingx');
-const dom = uni.requireNativePlugin('dom');
-const animation = uni.requireNativePlugin('animation');
+const BindingX = uni.requireNativePlugin('bindingx')
+const dom = uni.requireNativePlugin('dom')
+const animation = uni.requireNativePlugin('animation')
 
 bindIngXMixins = {
 	data() {
@@ -37,9 +37,9 @@ bindIngXMixins = {
 	},
 	mounted() {
 		this.box = this.getEl(this.$refs['selector-box--hock'])
-		this.selector = this.getEl(this.$refs['selector-content--hock']);
-		this.leftButton = this.getEl(this.$refs['selector-left-button--hock']);
-		this.rightButton = this.getEl(this.$refs['selector-right-button--hock']);
+		this.selector = this.getEl(this.$refs['selector-content--hock'])
+		this.leftButton = this.getEl(this.$refs['selector-left-button--hock'])
+		this.rightButton = this.getEl(this.$refs['selector-right-button--hock'])
 		this.init()
 	},
 	// beforeDestroy() {
@@ -80,9 +80,9 @@ bindIngXMixins = {
 
 			const leftWidth = this.button.left.width
 			const rightWidth = this.button.right.width
-			let expression = this.range(this.x, -rightWidth, leftWidth)
-			let leftExpression = this.range(this.x - leftWidth, -leftWidth, 0)
-			let rightExpression = this.range(this.x + rightWidth, 0, rightWidth)
+			const expression = this.range(this.x, -rightWidth, leftWidth)
+			const leftExpression = this.range(this.x - leftWidth, -leftWidth, 0)
+			const rightExpression = this.range(this.x + rightWidth, 0, rightWidth)
 
 			this.eventpan = BindingX.bind({
 				anchor: this.box,
@@ -99,15 +99,15 @@ bindIngXMixins = {
 					element: this.rightButton,
 					property: 'transform.translateX',
 					expression: rightExpression
-				}, ]
+				},]
 			}, (e) => {
 				// nope
 				if (e.state === 'end') {
-					this.x = e.deltaX + this.x;
+					this.x = e.deltaX + this.x
 					this.isclick = true
 					this.bindTiming(e.deltaX)
 				}
-			});
+			})
 		},
 		touchend(e) {
 			if (this.isopen !== 'none' && !this.isclick) {
@@ -127,21 +127,17 @@ bindIngXMixins = {
 				} else {
 					this.open('none')
 				}
-			} else {
-				if ((x > -leftWidth && x < 0) || x > rightWidth) {
+			} else if ((x > -leftWidth && x < 0) || x > rightWidth) {
 					if ((x > -threshold && x < 0) || (x - rightWidth > threshold)) {
 						this.open('left')
 					} else {
 						this.open('none')
 					}
-				} else {
-					if ((x < threshold && x > 0) || (x + leftWidth < -threshold)) {
+				} else if ((x < threshold && x > 0) || (x + leftWidth < -threshold)) {
 						this.open('right')
 					} else {
 						this.open('none')
 					}
-				}
-			}
 		},
 
 		/**

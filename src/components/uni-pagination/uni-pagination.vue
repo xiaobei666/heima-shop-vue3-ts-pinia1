@@ -1,45 +1,77 @@
 <template>
-	<view class="uni-pagination">
-		<!-- #ifndef APP-NVUE -->
-		<view class="uni-pagination__total is-phone-hide">共 {{ total }} 条</view>
-		<!-- #endif -->
-		<view class="uni-pagination__btn"
-			:class="currentIndex === 1 ? 'uni-pagination--disabled' : 'uni-pagination--enabled'"
-			:hover-class="currentIndex === 1 ? '' : 'uni-pagination--hover'" :hover-start-time="20"
-			:hover-stay-time="70" @click="clickLeft">
-			<template v-if="showIcon === true || showIcon === 'true'">
-				<uni-icons color="#666" size="16" type="left" />
-			</template>
-			<template v-else>
-				<text class="uni-pagination__child-btn">{{ prevPageText }}</text>
-			</template>
-		</view>
-		<view class="uni-pagination__num uni-pagination__num-flex-none">
-			<view class="uni-pagination__num-current">
-				<text class="uni-pagination__num-current-text is-pc-hide"
-					style="color:#409EFF">{{ currentIndex }}</text>
-				<text class="uni-pagination__num-current-text is-pc-hide">/{{ maxPage || 0 }}</text>
-				<!-- #ifndef APP-NVUE -->
-				<view v-for="(item, index) in paper" :key="index" :class="{ 'page--active': item === currentIndex }"
-					class="uni-pagination__num-tag tag--active is-phone-hide" @click.top="selectPage(item, index)">
-					<text>{{ item }}</text>
-				</view>
-				<!-- #endif -->
-
-			</view>
-		</view>
-		<view class="uni-pagination__btn"
-			:class="currentIndex >= maxPage ? 'uni-pagination--disabled' : 'uni-pagination--enabled'"
-			:hover-class="currentIndex === maxPage ? '' : 'uni-pagination--hover'" :hover-start-time="20"
-			:hover-stay-time="70" @click="clickRight">
-			<template v-if="showIcon === true || showIcon === 'true'">
-				<uni-icons color="#666" size="16" type="right" />
-			</template>
-			<template v-else>
-				<text class="uni-pagination__child-btn">{{ nextPageText }}</text>
-			</template>
-		</view>
-	</view>
+  <view class="uni-pagination">
+    <!-- #ifndef APP-NVUE -->
+    <view class="uni-pagination__total is-phone-hide">
+      共 {{ total }} 条
+    </view>
+    <!-- #endif -->
+    <view
+      class="uni-pagination__btn"
+      :class="currentIndex === 1 ? 'uni-pagination--disabled' : 'uni-pagination--enabled'"
+      :hover-class="currentIndex === 1 ? '' : 'uni-pagination--hover'"
+      :hover-start-time="20"
+      :hover-stay-time="70"
+      @click="clickLeft"
+    >
+      <template v-if="showIcon === true || showIcon === 'true'">
+        <uni-icons
+          color="#666"
+          size="16"
+          type="left"
+        />
+      </template>
+      <template v-else>
+        <text class="uni-pagination__child-btn">
+          {{ prevPageText }}
+        </text>
+      </template>
+    </view>
+    <view class="uni-pagination__num uni-pagination__num-flex-none">
+      <view class="uni-pagination__num-current">
+        <text
+          class="uni-pagination__num-current-text is-pc-hide"
+          style="color:#409EFF"
+        >
+          {{ currentIndex }}
+        </text>
+        <text class="uni-pagination__num-current-text is-pc-hide">
+          /{{ maxPage || 0 }}
+        </text>
+        <!-- #ifndef APP-NVUE -->
+        <view
+          v-for="(item, index) in paper"
+          :key="index"
+          :class="{ 'page--active': item === currentIndex }"
+          class="uni-pagination__num-tag tag--active is-phone-hide"
+          @click.top="selectPage(item, index)"
+        >
+          <text>{{ item }}</text>
+        </view>
+        <!-- #endif -->
+      </view>
+    </view>
+    <view
+      class="uni-pagination__btn"
+      :class="currentIndex >= maxPage ? 'uni-pagination--disabled' : 'uni-pagination--enabled'"
+      :hover-class="currentIndex === maxPage ? '' : 'uni-pagination--hover'"
+      :hover-start-time="20"
+      :hover-stay-time="70"
+      @click="clickRight"
+    >
+      <template v-if="showIcon === true || showIcon === 'true'">
+        <uni-icons
+          color="#666"
+          size="16"
+          type="right"
+        />
+      </template>
+      <template v-else>
+        <text class="uni-pagination__child-btn">
+          {{ nextPageText }}
+        </text>
+      </template>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -59,13 +91,13 @@
 	import {
 		initVueI18n
 	} from '@dcloudio/uni-i18n'
+
 	import messages from './i18n/index.js'
 	const {
 		t
 	} = initVueI18n(messages)
 	export default {
 		name: 'UniPagination',
-		emits: ['update:modelValue', 'input', 'change'],
 		props: {
 			value: {
 				type: [Number, String],
@@ -105,6 +137,7 @@
 				default: 7
 			}
 		},
+		emits: ['update:modelValue', 'input', 'change'],
 		data() {
 			return {
 				currentIndex: 1,
@@ -120,8 +153,8 @@
 			},
 			maxPage() {
 				let maxPage = 1
-				let total = Number(this.total)
-				let pageSize = Number(this.pageSize)
+				const total = Number(this.total)
+				const pageSize = Number(this.pageSize)
 				if (total && pageSize) {
 					maxPage = Math.ceil(total / pageSize)
 				}
@@ -134,9 +167,9 @@
 				// const total = 181
 				const total = this.total
 				const pageSize = this.pageSize
-				let totalArr = []
-				let showPagerArr = []
-				let pagerNum = Math.ceil(total / pageSize)
+				const totalArr = []
+				const showPagerArr = []
+				const pagerNum = Math.ceil(total / pageSize)
 				for (let i = 0; i < pagerNum; i++) {
 					totalArr.push(i + 1)
 				}
@@ -151,12 +184,10 @@
 						if (item > num - (pagerCount + 1) / 2 && item < num + (pagerCount + 1) / 2) {
 							showPagerArr.push(item)
 						}
-					} else {
-						if ((item > num - (pagerCount + 1) / 2 || pagerNum - pagerCount < item) && item < totalArr[
+					} else if ((item > num - (pagerCount + 1) / 2 || pagerNum - pagerCount < item) && item < totalArr[
 								totalArr.length - 1]) {
 							showPagerArr.push(item)
 						}
-					}
 				})
 				if (pagerNum > pagerCount) {
 					if ((pagerCount + 1) / 2 >= num) {
@@ -168,12 +199,10 @@
 						showPagerArr[1] = '...'
 					}
 					showPagerArr.push(totalArr[totalArr.length - 1])
-				} else {
-					if ((pagerCount + 1) / 2 >= num) {} else if (num + 2 <= totalNum) {} else {
+				} else if ((pagerCount + 1) / 2 >= num) {} else if (num + 2 <= totalNum) {} else {
 						showPagerArr.shift()
 						showPagerArr.push(totalArr[totalArr.length - 1])
 					}
-				}
 
 				return showPagerArr
 			}
@@ -208,7 +237,7 @@
 					this.currentIndex = e
 					this.change('current')
 				} else {
-					let pagerNum = Math.ceil(this.total / this.pageSize)
+					const pagerNum = Math.ceil(this.total / this.pageSize)
 					// let pagerNum = Math.ceil(181 / this.pageSize)
 					// 上一页
 					if (index <= 1) {
@@ -226,7 +255,7 @@
 						} else {
 							this.currentIndex += 5
 						}
-						return
+						
 					}
 				}
 			},
@@ -256,7 +285,7 @@
 	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	$uni-primary: #2979ff;
 	.uni-pagination {
 		/* #ifndef APP-NVUE */

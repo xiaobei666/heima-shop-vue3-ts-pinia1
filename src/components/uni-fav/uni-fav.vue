@@ -1,17 +1,40 @@
 <template>
-	<view :class="[circle === true || circle === 'true' ? 'uni-fav--circle' : '']" :style="[{ backgroundColor: checked ? bgColorChecked : bgColor }]"
-	 @click="onClick" class="uni-fav">
-		<!-- #ifdef MP-ALIPAY -->
-		<view class="uni-fav-star" v-if="!checked && (star === true || star === 'true')">
-			<uni-icons :color="fgColor" :style="{color: checked ? fgColorChecked : fgColor}" size="14" type="star-filled" />
-		</view>
-		<!-- #endif -->
-		<!-- #ifndef MP-ALIPAY -->
-		<uni-icons :color="fgColor" :style="{color: checked ? fgColorChecked : fgColor}" class="uni-fav-star" size="14" type="star-filled"
-		 v-if="!checked && (star === true || star === 'true')" />
-		<!-- #endif -->
-		<text :style="{color: checked ? fgColorChecked : fgColor}" class="uni-fav-text">{{ checked ? contentFav : contentDefault }}</text>
-	</view>
+  <view
+    :class="[circle === true || circle === 'true' ? 'uni-fav--circle' : '']"
+    :style="[{ backgroundColor: checked ? bgColorChecked : bgColor }]"
+    class="uni-fav"
+    @click="onClick"
+  >
+    <!-- #ifdef MP-ALIPAY -->
+    <view
+      v-if="!checked && (star === true || star === 'true')"
+      class="uni-fav-star"
+    >
+      <uni-icons
+        :color="fgColor"
+        :style="{color: checked ? fgColorChecked : fgColor}"
+        size="14"
+        type="star-filled"
+      />
+    </view>
+    <!-- #endif -->
+    <!-- #ifndef MP-ALIPAY -->
+    <uni-icons
+      v-if="!checked && (star === true || star === 'true')"
+      :color="fgColor"
+      :style="{color: checked ? fgColorChecked : fgColor}"
+      class="uni-fav-star"
+      size="14"
+      type="star-filled"
+    />
+    <!-- #endif -->
+    <text
+      :style="{color: checked ? fgColorChecked : fgColor}"
+      class="uni-fav-text"
+    >
+      {{ checked ? contentFav : contentDefault }}
+    </text>
+  </view>
 </template>
 
 <script>
@@ -36,13 +59,12 @@
 	import {
 		initVueI18n
 	} from '@dcloudio/uni-i18n'
+
 	import messages from './i18n/index.js'
 	const {	t	} = initVueI18n(messages)
 
 	export default {
 		name: "UniFav",
-		// TODO 兼容 vue3，需要注册事件
-		emits: ['click'],
 		props: {
 			star: {
 				type: [Boolean, String],
@@ -78,7 +100,7 @@
 					return {
 						contentDefault: "",
 						contentFav: ""
-					};
+					}
 				}
 			},
 			stat:{
@@ -86,6 +108,8 @@
 				default: false
 			}
 		},
+		// TODO 兼容 vue3，需要注册事件
+		emits: ['click'],
 		computed: {
 			contentDefault() {
 				return this.contentText.contentDefault || t("uni-fav.collect")
@@ -98,22 +122,22 @@
 			checked() {
 				if (uni.report && this.stat) {
 					if (this.checked) {
-						uni.report("收藏", "收藏");
+						uni.report("收藏", "收藏")
 					} else {
-						uni.report("取消收藏", "取消收藏");
+						uni.report("取消收藏", "取消收藏")
 					}
 				}
 			}
 		},
 		methods: {
 			onClick() {
-				this.$emit("click");
+				this.$emit("click")
 			}
 		}
-	};
+	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	$fav-height: 25px;
 
 	.uni-fav {

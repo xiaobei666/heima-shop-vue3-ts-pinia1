@@ -1,14 +1,41 @@
 <template>
-	<view class="uni-numbox">
-		<view @click="_calcValue('minus')" class="uni-numbox__minus uni-numbox-btns" :style="{background}">
-			<text class="uni-numbox--text" :class="{ 'uni-numbox--disabled': inputValue <= min || disabled }" :style="{color}">-</text>
-		</view>
-		<input :disabled="disabled" @focus="_onFocus" @blur="_onBlur" class="uni-numbox__value" type="number"
-			v-model="inputValue" :style="{background, color}" />
-		<view @click="_calcValue('plus')" class="uni-numbox__plus uni-numbox-btns" :style="{background}">
-			<text class="uni-numbox--text" :class="{ 'uni-numbox--disabled': inputValue >= max || disabled }" :style="{color}">+</text>
-		</view>
-	</view>
+  <view class="uni-numbox">
+    <view
+      class="uni-numbox__minus uni-numbox-btns"
+      :style="{background}"
+      @click="_calcValue('minus')"
+    >
+      <text
+        class="uni-numbox--text"
+        :class="{ 'uni-numbox--disabled': inputValue <= min || disabled }"
+        :style="{color}"
+      >
+        -
+      </text>
+    </view>
+    <input
+      v-model="inputValue"
+      :disabled="disabled"
+      class="uni-numbox__value"
+      type="number"
+      :style="{background, color}"
+      @focus="_onFocus"
+      @blur="_onBlur"
+    >
+    <view
+      class="uni-numbox__plus uni-numbox-btns"
+      :style="{background}"
+      @click="_calcValue('plus')"
+    >
+      <text
+        class="uni-numbox--text"
+        :class="{ 'uni-numbox--disabled': inputValue >= max || disabled }"
+        :style="{color}"
+      >
+        +
+      </text>
+    </view>
+  </view>
 </template>
 <script>
 	/**
@@ -29,7 +56,6 @@
 
 	export default {
 		name: "UniNumberBox",
-		emits: ['change', 'input', 'update:modelValue', 'blur', 'focus'],
 		props: {
 			value: {
 				type: [Number, String],
@@ -64,39 +90,40 @@
 				default: false
 			}
 		},
+		emits: ['change', 'input', 'update:modelValue', 'blur', 'focus'],
 		data() {
 			return {
 				inputValue: 0
-			};
+			}
 		},
 		watch: {
 			value(val) {
-				this.inputValue = +val;
+				this.inputValue = +val
 			},
 			modelValue(val) {
-				this.inputValue = +val;
+				this.inputValue = +val
 			}
 		},
 		created() {
 			if (this.value === 1) {
-				this.inputValue = +this.modelValue;
+				this.inputValue = +this.modelValue
 			}
 			if (this.modelValue === 1) {
-				this.inputValue = +this.value;
+				this.inputValue = +this.value
 			}
 		},
 		methods: {
 			_calcValue(type) {
 				if (this.disabled) {
-					return;
+					return
 				}
-				const scale = this._getDecimalScale();
-				let value = this.inputValue * scale;
-				let step = this.step * scale;
+				const scale = this._getDecimalScale()
+				let value = this.inputValue * scale
+				const step = this.step * scale
 				if (type === "minus") {
-					value -= step;
+					value -= step
 					if (value < (this.min * scale)) {
-						return;
+						return
 					}
 					if (value > (this.max * scale)) {
 						value = this.max * scale
@@ -104,57 +131,57 @@
 				}
 
 				if (type === "plus") {
-					value += step;
+					value += step
 					if (value > (this.max * scale)) {
-						return;
+						return
 					}
 					if (value < (this.min * scale)) {
 						value = this.min * scale
 					}
 				}
 
-				this.inputValue = (value / scale).toFixed(String(scale).length - 1);
-				this.$emit("change", +this.inputValue);
+				this.inputValue = (value / scale).toFixed(String(scale).length - 1)
+				this.$emit("change", +this.inputValue)
 				// TODO vue2 兼容
-				this.$emit("input", +this.inputValue);
+				this.$emit("input", +this.inputValue)
 				// TODO vue3 兼容
-				this.$emit("update:modelValue", +this.inputValue);
+				this.$emit("update:modelValue", +this.inputValue)
 			},
 			_getDecimalScale() {
 
-				let scale = 1;
+				let scale = 1
 				// 浮点型
 				if (~~this.step !== this.step) {
-					scale = Math.pow(10, String(this.step).split(".")[1].length);
+					scale = Math.pow(10, String(this.step).split(".")[1].length)
 				}
-				return scale;
+				return scale
 			},
 			_onBlur(event) {
 				this.$emit('blur', event)
-				let value = event.detail.value;
+				let value = event.detail.value
 				if (isNaN(value)) {
-					this.inputValue = this.min;
-					return;
+					this.inputValue = this.min
+					return
 				}
-				value = +value;
+				value = +value
 				if (value > this.max) {
-					value = this.max;
+					value = this.max
 				} else if (value < this.min) {
-					value = this.min;
+					value = this.min
 				}
-				const scale = this._getDecimalScale();
-				this.inputValue = value.toFixed(String(scale).length - 1);
-				this.$emit("change", +this.inputValue);
-				this.$emit("input", +this.inputValue);
-				this.$emit("update:modelValue", +this.inputValue);
+				const scale = this._getDecimalScale()
+				this.inputValue = value.toFixed(String(scale).length - 1)
+				this.$emit("change", +this.inputValue)
+				this.$emit("input", +this.inputValue)
+				this.$emit("update:modelValue", +this.inputValue)
 			},
 			_onFocus(event) {
 				this.$emit('focus', event)
 			}
 		}
-	};
+	}
 </script>
-<style lang="scss" >
+<style lang="scss">
 	$box-height: 26px;
 	$bg: #f5f5f5;
 	$br: 2px;

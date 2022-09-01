@@ -1,21 +1,31 @@
 <template>
-	<!-- #ifdef APP-NVUE -->
-	<cell>
-		<!-- #endif -->
-		<view class="uni-list-ad">
-			<view v-if="borderShow" :class="{'uni-list--border':border,'uni-list-item--first':isFirstChild}"></view>
-			<ad style="width: 200px;height: 300px;border-width: 1px;border-color: red;border-style: solid;" adpid="1111111111"
-			 unit-id="" appid="" apid="" type="feed" @error="aderror" @close="closeAd"></ad>
-		</view>
-		<!-- #ifdef APP-NVUE -->
-	</cell>
-	<!-- #endif -->
-
+  <!-- #ifdef APP-NVUE -->
+  <cell>
+    <!-- #endif -->
+    <view class="uni-list-ad">
+      <view
+        v-if="borderShow"
+        :class="{'uni-list--border':border,'uni-list-item--first':isFirstChild}"
+      />
+      <ad
+        style="width: 200px;height: 300px;border-width: 1px;border-color: red;border-style: solid;"
+        adpid="1111111111"
+        unit-id=""
+        appid=""
+        apid=""
+        type="feed"
+        @error="aderror"
+        @close="closeAd"
+      />
+    </view>
+    <!-- #ifdef APP-NVUE -->
+  </cell>
+  <!-- #endif -->
 </template>
 
 <script>
 	// #ifdef APP-NVUE
-	const dom = uni.requireNativePlugin('dom');
+	const dom = uni.requireNativePlugin('dom')
 	// #endif
 	export default {
 		name: 'UniListAd',
@@ -50,17 +60,17 @@
 			 * 获取父元素实例
 			 */
 			getForm(name = 'uniList') {
-				let parent = this.$parent;
-				let parentName = parent.$options.name;
+				let parent = this.$parent
+				let parentName = parent.$options.name
 				while (parentName !== name) {
-					parent = parent.$parent;
+					parent = parent.$parent
 					if (!parent) return false
-					parentName = parent.$options.name;
+					parentName = parent.$options.name
 				}
-				return parent;
+				return parent
 			},
 			aderror(e) {
-				console.log("aderror: " + JSON.stringify(e.detail));
+				console.log("aderror: " + JSON.stringify(e.detail))
 			},
 			closeAd(e) {
 				this.borderShow = false
@@ -69,7 +79,7 @@
 	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	.uni-list-ad {
 		position: relative;
 		border: 1px red solid;

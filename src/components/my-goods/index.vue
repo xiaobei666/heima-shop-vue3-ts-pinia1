@@ -1,23 +1,37 @@
 <template>
   <!-- goods-item项 -->
-    <!-- <view class="goods-item" @click="testHandel()"> -->
-    <view class="goods-item" >
-      <!-- 左侧盒子 -->
-      <view class="goods-item-left">
-        <!-- 添加勾选状态 -->
-        <radio :checked="props.good.goods_state" color="#c00000" v-if="showRadio" @click="radioClickHandle"></radio>
-        <image :src="good.goods_small_logo || defaultPic" class="goods-pic"/>
+  <!-- <view class="goods-item" @click="testHandel()"> -->
+  <view class="goods-item">
+    <!-- 左侧盒子 -->
+    <view class="goods-item-left">
+      <!-- 添加勾选状态 -->
+      <radio
+        v-if="showRadio"
+        :checked="props.good.goods_state"
+        color="#c00000"
+        @click="radioClickHandle"
+      />
+      <image
+        :src="good.goods_small_logo || defaultPic"
+        class="goods-pic"
+      />
+    </view>
+    <!-- 右侧盒子 -->
+    <view class="goods-item-right">
+      <view class="goods-name">
+        {{ good.goods_name }}
       </view>
-      <!-- 右侧盒子 -->
-      <view class="goods-item-right">
-        <view class="goods-name">{{good.goods_name}}</view>
-        <view class="goods-info-box">
-          <view>￥{{toFixed(good.goods_price as number)}}</view>
-          <uni-number-box @change="numChangeHandle" :min="1" :value="good.goods_count" v-if="showNum"></uni-number-box>
-        </view>
-        
+      <view class="goods-info-box">
+        <view>￥{{ toFixed(good.goods_price as number) }}</view>
+        <uni-number-box
+          v-if="showNum"
+          :min="1"
+          :value="good.goods_count"
+          @change="numChangeHandle"
+        />
       </view>
     </view>
+  </view>
 </template>
 
 <script lang="ts" setup>
@@ -28,7 +42,7 @@ type MyFuse<T,U>={
 }&{
   [K in (keyof T|keyof U)]:U[K & keyof U]
 }
-const defaultPic='https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png'
+const defaultPic = 'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png'
   const props = withDefaults(defineProps<{
     good: MyFuse<Good,CartShop>|CartShop,
     showRadio?:boolean,
@@ -36,13 +50,13 @@ const defaultPic='https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30c
 }>(),{
   showRadio:false,
   showNum:false
-});
+})
 
 //声明价格处理函数
-const toFixed=(num:number)=>{
+const toFixed = (num:number) => {
   return num.toFixed(2)
 }
-const emit=defineEmits<{
+const emit = defineEmits<{
   (e:'radio-change',good:{
     goods_id:number,
     goods_state:boolean
@@ -54,7 +68,7 @@ const emit=defineEmits<{
   }):void
 }>()
 //声明radio点击处理函数
-const radioClickHandle=()=>{
+const radioClickHandle = () => {
   /**
    * 为啥要主动触发外界自定义事件
    * 因为外界绑定的点击事件不能直接响应
@@ -73,7 +87,7 @@ const radioClickHandle=()=>{
 } */
 
 //声明num点击事件
-const numChangeHandle=(value:number)=>{
+const numChangeHandle = (value:number) => {
   emit('num-change',{
     goods_id:props.good.goods_id,
     goods_count:value

@@ -1,7 +1,7 @@
 <template>
-	<view>
-		<slot></slot>
-	</view>
+  <view>
+    <slot />
+  </view>
 </template>
 
 <script>
@@ -11,26 +11,26 @@
 	 * @tutorial https://ext.dcloud.net.cn/plugin?id=181
 	 */
 	export default {
-		name:"uniSwipeAction",
+		name:"UniSwipeAction",
 		data() {
-			return {};
+			return {}
 		},
 		created() {
-			this.children = [];
+			this.children = []
 		},
 		methods: {
 			// 公开给用户使用，重制组件样式
-			resize(){
+			resize() {
 				// wxs 会自己计算组件大小，所以无需执行下面代码
 				// #ifndef APP-VUE || H5 || MP-WEIXIN
-				this.children.forEach(vm=>{
+				this.children.forEach(vm => {
 					vm.init()
 				})
 				// #endif
 			},
 			// 公开给用户使用，关闭全部 已经打开的组件
-			closeAll(){
-				this.children.forEach(vm=>{
+			closeAll() {
+				this.children.forEach(vm => {
 					// #ifdef APP-VUE || H5 || MP-WEIXIN
 					vm.is_show = 'none'
 					// #endif
@@ -54,7 +54,7 @@
 				this.openItem = vm
 			}
 		}
-	};
+	}
 </script>
 
 <style></style>

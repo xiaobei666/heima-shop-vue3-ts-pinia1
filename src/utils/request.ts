@@ -11,32 +11,32 @@ class MyHttpRequest {
 
   private requestCallbackFn: (
     option: UniApp.RequestOptions,
-    
+
   ) => UniApp.RequestOptions
 
   private responseCallbackFn: (
     res: UniApp.RequestSuccessCallbackResult,
-    
+
   ) => UniApp.RequestSuccessCallbackResult
 
   constructor(opt: { baseUrl?: string; header?: {} } = {}) {
     this.baseUrl = opt.baseUrl
 
     this.requestCallbackFn = (opt) => {
-      
+
       return opt
     }
 
     this.responseCallbackFn = (res) => {
 
-      return  res
+      return res
     }
   }
   //添加请求拦截的方法
   public beforeRequest(
     fn: (option: UniApp.RequestOptions) => UniApp.RequestOptions
   ) {
-    this.requestCallbackFn=fn
+    this.requestCallbackFn = fn
   }
   //添加响应拦截的方法
   public afterRequest(
@@ -58,15 +58,15 @@ class MyHttpRequest {
       data: query,
     })
     //添加设置基本路径
-    if(typeof this.baseUrl!='undefined'){
-      opt.url=this.baseUrl+opt.url
+    if(typeof this.baseUrl !== 'undefined') {
+      opt.url = this.baseUrl + opt.url
     }
     return new Promise((resolve, reject) => {
       uni.request({
         ...opt,
         method: method,
         success: (res: UniApp.RequestSuccessCallbackResult) => {
-          const result=this.responseCallbackFn(res)
+          const result = this.responseCallbackFn(res)
           resolve(result)
         },
         fail: (res) => {

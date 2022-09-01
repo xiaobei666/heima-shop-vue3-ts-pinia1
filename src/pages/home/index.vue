@@ -1,13 +1,29 @@
 <template>
   <!-- 顶部搜索吸顶 -->
   <view class="search-box">
-    <my-search bg-color="pink" @my-click="gotoSearch()"></my-search>
+    <my-search
+      bg-color="pink"
+      @my-click="gotoSearch()"
+    />
   </view>
 
   <!-- 渲染轮播图 -->
-  <swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000"  :duration="1000" :circular="true">
-    <swiper-item v-for="(item) in swiperList" :key="item.goods_id">
-      <navigator :url="'/subpkg/goods_detail/index?goods_id='+item.goods_id" class="swiper-item" >
+  <swiper
+    class="swiper"
+    :indicator-dots="true"
+    :autoplay="true"
+    :interval="3000"
+    :duration="1000"
+    :circular="true"
+  >
+    <swiper-item
+      v-for="(item) in swiperList"
+      :key="item.goods_id"
+    >
+      <navigator
+        :url="'/subpkg/goods_detail/index?goods_id='+item.goods_id"
+        class="swiper-item"
+      >
         <image :src="item.image_src" />
       </navigator>
     </swiper-item>
@@ -15,25 +31,55 @@
 
   <!-- 分类导航区 -->
   <view class="nav-list">
-    <view v-for="(item) in navList" :key="item.name" @click="navClickHandel(item)">
-      <image :src="item.image_src" class="nav-image"/>
+    <view
+      v-for="(item) in navList"
+      :key="item.name"
+      @click="navClickHandel(item)"
+    >
+      <image
+        :src="item.image_src"
+        class="nav-image"
+      />
     </view>
   </view>
 
   <!-- 渲染楼层 -->
   <view class="floor-list">
     <!-- 楼层item项 -->
-    <view class="floor-item" v-for="item in floorList" :key="item.floor_title.name">
+    <view
+      v-for="item in floorList"
+      :key="item.floor_title.name"
+      class="floor-item"
+    >
       <!-- 楼层标题 -->
-      <image :src="item.floor_title.image_src" class="floor-title"/>
+      <image
+        :src="item.floor_title.image_src"
+        class="floor-title"
+      />
       <!-- 楼层图片 -->
       <view class="floor-img-box">
-        <navigator :url="item.product_list[0].navigator_url" class="left-img-box">
-          <image  mode="widthFix" :src="item.product_list[0].image_src" :style="{width:item.product_list[0].image_width+'rpx'}"/>
+        <navigator
+          :url="item.product_list[0].navigator_url"
+          class="left-img-box"
+        >
+          <image
+            mode="widthFix"
+            :src="item.product_list[0].image_src"
+            :style="{width:item.product_list[0].image_width+'rpx'}"
+          />
         </navigator>
         <view class="right-img-box">
-          <navigator :url="item2.navigator_url" class="right-img-item" v-for="item2 in item.product_list.slice(1)" :key="item2.name">  
-            <image mode="widthFix" :src="item2.image_src" :style="{width:item2.image_width+'rpx'}"/>
+          <navigator
+            v-for="item2 in item.product_list.slice(1)"
+            :key="item2.name"
+            :url="item2.navigator_url"
+            class="right-img-item"
+          >
+            <image
+              mode="widthFix"
+              :src="item2.image_src"
+              :style="{width:item2.image_width+'rpx'}"
+            />
           </navigator>
         </view>
       </view>
@@ -42,20 +88,21 @@
 </template>
 
 <script lang="ts" setup>
-import { onLoad } from '@dcloudio/uni-app';
-import { reactive } from 'vue';
-import { getSwiperList ,getNavList,getFloorList} from '@/api/home';
-import {encapsulateData} from '@/utils/hooks'
+import { onLoad } from '@dcloudio/uni-app'
+import { reactive } from 'vue'
+
+import { getFloorList,getNavList,getSwiperList } from '@/api/home'
 import MySearch from '@/components/my-search/index.vue'
+import {encapsulateData} from '@/utils/hooks'
 //设置购物车徽标
 import {useSetBadge} from '@/utils/hooks'
 useSetBadge()
 
 //定义轮播图的数据列表
-const swiperList=reactive<SwiperData['message']>([])
-const navList=reactive<NavData['message']>([])
-const floorList=reactive<FloorData['message']>([])
-onLoad(async ()=>{
+const swiperList = reactive<SwiperData['message']>([])
+const navList = reactive<NavData['message']>([])
+const floorList = reactive<FloorData['message']>([])
+onLoad(async () => {
   //获取请求数据
   await encapsulateData(swiperList,getSwiperList)
 
@@ -68,8 +115,8 @@ onLoad(async ()=>{
 })
 
 //定义导航栏点击事件
-const navClickHandel=(item:Message1)=>{
-  if(item.name=='分类'){
+const navClickHandel = (item:Message1) => {
+  if(item.name == '分类') {
     uni.switchTab({
       url:"/pages/cate/index",
     })
@@ -77,7 +124,7 @@ const navClickHandel=(item:Message1)=>{
 }
 
 //点击跳转到搜索
-const gotoSearch=()=>{
+const gotoSearch = () => {
   uni.navigateTo({
     url:'/subpkg/search/index',
   })
@@ -108,7 +155,7 @@ const gotoSearch=()=>{
     width: 100%;
     display: flex;
   }
-  
+
   .right-img-box{
     display: flex;
     flex-wrap: wrap;

@@ -1,30 +1,77 @@
 <template>
-	<view class="uni-stat__select">
-		<span v-if="label" class="uni-label-text hide-on-phone">{{label + '：'}}</span>
-		<view :class="{'uni-stat__actived': current}">
-			<view class="uni-select">
-				<view class="uni-select__input-box" @click="toggleSelector">
-					<view v-if="current" class="uni-select__input-text">{{current}}</view>
-					<view v-else class="uni-select__input-text uni-select__input-placeholder">{{typePlaceholder}}</view>
-					<uni-icons v-if="current && clear" type="clear" color="#e1e1e1" size="18" @click="clearVal" />
-					<uni-icons v-else :type="showSelector? 'top' : 'bottom'" size="14" color="#999" />
-				</view>
-				<view class="uni-select--mask" v-if="showSelector" @click="toggleSelector" />
-				<view class="uni-select__selector" v-if="showSelector">
-					<view class="uni-popper__arrow"></view>
-					<scroll-view scroll-y="true" class="uni-select__selector-scroll">
-						<view class="uni-select__selector-empty" v-if="mixinDatacomResData.length === 0">
-							<text>{{emptyTips}}</text>
-						</view>
-						<view v-else class="uni-select__selector-item" v-for="(item,index) in mixinDatacomResData"
-							:key="index" @click="change(item)">
-							<text :class="{'uni-select__selector__disabled': item.disable}">{{formatItemName(item)}}</text>
-						</view>
-					</scroll-view>
-				</view>
-			</view>
-		</view>
-	</view>
+  <view class="uni-stat__select">
+    <span
+      v-if="label"
+      class="uni-label-text hide-on-phone"
+    >{{ label + '：' }}</span>
+    <view :class="{'uni-stat__actived': current}">
+      <view class="uni-select">
+        <view
+          class="uni-select__input-box"
+          @click="toggleSelector"
+        >
+          <view
+            v-if="current"
+            class="uni-select__input-text"
+          >
+            {{ current }}
+          </view>
+          <view
+            v-else
+            class="uni-select__input-text uni-select__input-placeholder"
+          >
+            {{ typePlaceholder }}
+          </view>
+          <uni-icons
+            v-if="current && clear"
+            type="clear"
+            color="#e1e1e1"
+            size="18"
+            @click="clearVal"
+          />
+          <uni-icons
+            v-else
+            :type="showSelector? 'top' : 'bottom'"
+            size="14"
+            color="#999"
+          />
+        </view>
+        <view
+          v-if="showSelector"
+          class="uni-select--mask"
+          @click="toggleSelector"
+        />
+        <view
+          v-if="showSelector"
+          class="uni-select__selector"
+        >
+          <view class="uni-popper__arrow" />
+          <scroll-view
+            scroll-y="true"
+            class="uni-select__selector-scroll"
+          >
+            <view
+              v-if="mixinDatacomResData.length === 0"
+              class="uni-select__selector-empty"
+            >
+              <text>{{ emptyTips }}</text>
+            </view>
+            <view
+              v-for="(item,index) in mixinDatacomResData"
+              v-else
+              :key="index"
+              class="uni-select__selector-item"
+              @click="change(item)"
+            >
+              <text :class="{'uni-select__selector__disabled': item.disable}">
+                {{ formatItemName(item) }}
+              </text>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -42,17 +89,8 @@
 	 */
 
 	export default {
-		name: "uni-stat-select",
+		name: "UniStatSelect",
 		mixins: [uniCloud.mixinDatacom || {}],
-		data() {
-			return {
-				showSelector: false,
-				current: '',
-				mixinDatacomResData: [],
-				apps: [],
-				channels: []
-			};
-		},
 		props: {
 			localdata: {
 				type: Array,
@@ -89,10 +127,13 @@
 				default: 0
 			}
 		},
-		created() {
-			this.last = `${this.collection}_last_selected_option_value`
-			if (this.collection && !this.localdata.length) {
-				this.mixinDatacomEasyGet()
+		data() {
+			return {
+				showSelector: false,
+				current: '',
+				mixinDatacomResData: [],
+				apps: [],
+				channels: []
 			}
 		},
 		computed: {
@@ -113,7 +154,7 @@
 			localdata: {
 				immediate: true,
 				handler(val, old) {
-					if (Array.isArray(val) && old!==val) {
+					if (Array.isArray(val) && old !== val) {
 						this.mixinDatacomResData = val
 					}
 				}
@@ -135,6 +176,12 @@
 						this.initDefVal()
 					}
 				}
+			}
+		},
+		created() {
+			this.last = `${this.collection}_last_selected_option_value`
+			if (this.collection && !this.localdata.length) {
+				this.mixinDatacomEasyGet()
 			}
 		},
 		methods: {
@@ -169,7 +216,7 @@
 			 * 判断用户给的 value 是否同时为禁用状态
 			 */
 			isDisabled(value) {
-				let isDisabled = false;
+				let isDisabled = false
 
 				this.mixinDatacomResData.forEach(item => {
 					if (item.value === value) {
@@ -177,7 +224,7 @@
 					}
 				})
 
-				return isDisabled;
+				return isDisabled
 			},
 
 			clearVal() {

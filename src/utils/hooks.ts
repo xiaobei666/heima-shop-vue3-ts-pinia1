@@ -1,13 +1,14 @@
-import { onShow } from '@dcloudio/uni-app';
+import { onShow } from '@dcloudio/uni-app'
+import { watch } from 'vue'
+
 import {useStore} from '@/store/store'
-import { watch } from 'vue';
 //封装方法
 //展示数据加载成功消息
 export function showMsg(
-  title:string='数据加载失败！',
-  duration:number=1500,
-  icon:UniApp.ShowToastOptions['icon']='none'
-){
+  title = '数据加载失败！',
+  duration = 1500,
+  icon:UniApp.ShowToastOptions['icon'] = 'none'
+) {
   uni.showToast({
     title,
     duration,
@@ -16,10 +17,10 @@ export function showMsg(
 }
 
 //将请求过来的数据封装到页面数据
-export async function encapsulateData(container:any[],getDataFn:()=>Promise<any>){
-  const res=await getDataFn()
+export async function encapsulateData(container:any[],getDataFn:()=>Promise<any>) {
+  const res = await getDataFn()
   //请求失败
-  if(res.meta.status!==200){
+  if(res.meta.status !== 200) {
     return showMsg()
   }
   //请求成功
@@ -29,30 +30,30 @@ export async function encapsulateData(container:any[],getDataFn:()=>Promise<any>
 
 //设置页面徽标hooks
 //相当于vue2的mixins
-export function useSetBadge(isWatch:boolean=false){
-  const store=useStore()
-  onShow(()=>{
+export function useSetBadge(isWatch = false) {
+  const store = useStore()
+  onShow(() => {
     setTabBarBadge()
   })
 
-  const setTabBarBadge=()=>{
+  const setTabBarBadge = () => {
     //调用uni.setTabBarBadge
     uni.setTabBarBadge({
       index:2,
-      text:store.total+'',
+      text:store.total + '',
     })
   }
-  if(isWatch){
+  if(isWatch) {
     //添加监听器
-    watch(()=>store.total,()=>{
+    watch(() => store.total,() => {
       setTabBarBadge()
     })
   }
 }
-const store=useStore()
+const store = useStore()
 //持久化存储
-export function useLocalStorage(){
-  store.$subscribe(()=>{
+export function useLocalStorage() {
+  store.$subscribe(() => {
     uni.setStorageSync('cart',JSON.stringify(store.cart))
     //组件卸载后保留,这样就能通用啦
     console.log(JSON.parse(uni.getStorageSync('cart')))
@@ -60,14 +61,14 @@ export function useLocalStorage(){
 }
 
 //封装选择地址接口
-export async function useChooseAddress(options?:UniApp.ChooseAddressOptions):Promise<UniApp.ChooseAddressRes>{
-  return new Promise((resolve,reject)=>{
+export async function useChooseAddress(options?:UniApp.ChooseAddressOptions):Promise<UniApp.ChooseAddressRes> {
+  return new Promise((resolve,reject) => {
     uni.chooseAddress({
       ...options,
-      success:(res)=>{
+      success:(res) => {
         resolve(res)
       },
-      fail:(res)=>{
+      fail:(res) => {
         reject(res)
       }
     })
@@ -75,14 +76,14 @@ export async function useChooseAddress(options?:UniApp.ChooseAddressOptions):Pro
 }
 
 //封装展示接口
-export async function useShowModal(options:UniApp.ShowModalOptions):Promise<UniApp.ShowModalRes>{
-  return new Promise((resolve,reject)=>[
+export async function useShowModal(options:UniApp.ShowModalOptions):Promise<UniApp.ShowModalRes> {
+  return new Promise((resolve,reject) => [
     uni.showModal({
       ...options,
-      success:(res)=>{
+      success:(res) => {
         resolve(res)
       },
-      fail:(res)=>{
+      fail:(res) => {
         reject(res)
       }
     })
@@ -90,14 +91,14 @@ export async function useShowModal(options:UniApp.ShowModalOptions):Promise<UniA
 }
 
 //封装uni.login
-export async function useLogin(options?:UniApp.LoginOptions):Promise<UniApp.LoginRes>{
-  return new Promise((resolve,reject)=>[
+export async function useLogin(options?:UniApp.LoginOptions):Promise<UniApp.LoginRes> {
+  return new Promise((resolve,reject) => [
     uni.login({
       ...options,
-      success:(res)=>{
+      success:(res) => {
         resolve(res)
       },
-      fail:(res)=>{
+      fail:(res) => {
         reject(res)
       }
     })
@@ -105,14 +106,14 @@ export async function useLogin(options?:UniApp.LoginOptions):Promise<UniApp.Logi
 }
 
 //封装uni.getUserProfile
-export async function useUserProfile(options?:UniApp.GetUserProfileOptions):Promise<UniApp.GetUserProfileRes>{
-  return new Promise((resolve,reject)=>[
+export async function useUserProfile(options?:UniApp.GetUserProfileOptions):Promise<UniApp.GetUserProfileRes> {
+  return new Promise((resolve,reject) => [
     uni.getUserProfile({
       ...options,
-      success:(res)=>{
+      success:(res) => {
         resolve(res)
       },
-      fail:(res)=>{
+      fail:(res) => {
         reject(res)
       }
     })

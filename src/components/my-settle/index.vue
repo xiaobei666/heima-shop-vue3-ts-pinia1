@@ -1,48 +1,62 @@
 <template>
   <view class="my-settle-container">
     <!-- 全选 -->
-    <label class="radio" @click="store.FullCheckOrNo(!isFullCheck)">
-      <radio :checked="isFullCheck" color="#c00000" /> <text>全选</text>
+    <label
+      class="radio"
+      @click="store.FullCheckOrNo(!isFullCheck)"
+    >
+      <radio
+        :checked="isFullCheck"
+        color="#c00000"
+      /> <text>全选</text>
     </label>
     <!-- 合计 -->
     <view class="amount-box">
-      合计:<text class="amount">￥{{ checkGoodsAmount }}</text>
+      合计:<text class="amount">
+        ￥{{ checkGoodsAmount }}
+      </text>
     </view>
     <!-- 结算按钮 -->
-    <view class="btn-settle" @click="clickSettleHandle"> 结算({{ checkCount }}) </view>
+    <view
+      class="btn-settle"
+      @click="clickSettleHandle"
+    >
+      结算({{ checkCount }})
+    </view>
   </view>
 </template>
 
 <script lang="ts" setup>
-import {useStore} from '@/store/store'
-import {useAddress} from '@/store/address'
 import {storeToRefs} from 'pinia'
-import { computed ,ref} from 'vue';
-import { showMsg } from '@/utils/hooks';
-import {postOrderCreate,postOrder} from '@/api/my'
-import { myHttp } from '@/utils/request';
-const store=useStore()
-const addressStore=useAddress()
-const {address,token}=storeToRefs(addressStore)
+import { computed ,ref} from 'vue'
+
+import {postOrder,postOrderCreate} from '@/api/my'
+import {useAddress} from '@/store/address'
+import {useStore} from '@/store/store'
+import { showMsg } from '@/utils/hooks'
+import { myHttp } from '@/utils/request'
+const store = useStore()
+const addressStore = useAddress()
+const {address,token} = storeToRefs(addressStore)
 //果然会丢失响应式
 /* const {checkCount,checkGoodsAmount} =store */
-const {checkCount,checkGoodsAmount} =storeToRefs(store)
-const isFullCheck=computed(()=>{
-  return store.goodsTotal==store.checkCount
+const {checkCount,checkGoodsAmount} = storeToRefs(store)
+const isFullCheck = computed(() => {
+  return store.goodsTotal == store.checkCount
 })
 
 //点击结算按钮处理函数
-const clickSettleHandle=()=>{
+const clickSettleHandle = () => {
   //判断条件
-  if(checkCount.value==0)return showMsg('请选择要结算的商品！')
-  if(JSON.stringify(address.value)=='{}')return showMsg('请选择收货地址!')
+  if(checkCount.value == 0)return showMsg('请选择要结算的商品！')
+  if(JSON.stringify(address.value) == '{}')return showMsg('请选择收货地址!')
   if(!token.value)return delayNavigator()
   payOrder()
 }
 //定义数字秒
-let n=3
+let n = 3
 //展示倒计时的提示消息
-const showTips=(n:number)=>{
+const showTips = (n:number) => {
   uni.showToast({
     title:'请登录后再结算！' + n + ' 秒后自动跳转到登录页',
     icon:'none',
@@ -52,21 +66,21 @@ const showTips=(n:number)=>{
 }
 
 //延迟导航到my页面
-const delayNavigator=()=>{
+const delayNavigator = () => {
   showTips(n)
-  let timer:number;
+  let timer:number
   //创建定时器每隔一秒执行
-  timer=setInterval(()=>{
+  timer = setInterval(() => {
     n--
-    if(n<=0){
+    if(n <= 0) {
 
       clearInterval(timer)
       uni.switchTab({
         url:'/pages/my/index',
       })
-      n=3
+      n = 3
       //设置重定向参数
-      addressStore.redirectInfo={
+      addressStore.redirectInfo = {
         openType:'switchTab',
         from:'/pages/cart/index'
       }
@@ -77,10 +91,10 @@ const delayNavigator=()=>{
   },1000)
 }
 
-const payOrder=async ()=>{
+const payOrder = async () => {
   //1.创建订单
   // 1.1 组织订单的信息对象
-  const orderInfo={
+  const orderInfo = {
     // 开发期间，注释掉真实的订单价格，
     // order_price: this.checkedGoodsAmount,
     // 写死订单总价为 1 分钱
@@ -89,13 +103,13 @@ const payOrder=async ()=>{
     goods:store.cart.filter(x => x.goods_state).map(x => ({ goods_id: x.goods_id, goods_number: x.goods_count, goods_price: x.goods_price }))
   }
   // 1.2 发起请求创建订单
-  const res=await postOrderCreate(orderInfo)
-  if(res.meta.status!==200)return showMsg('创建订单失败！')
+  const res = await postOrderCreate(orderInfo)
+  if(res.meta.status !== 200)return showMsg('创建订单失败！')
   console.log(res)
   //得到订单编号
-  const orderNumber=res.message.order_number
-  const res2:any=await postOrder(orderNumber)
-  if(res2.meta.status!==200)return showMsg('订单预支付失败！')
+  const orderNumber = res.message.order_number
+  const res2:any = await postOrder(orderNumber)
+  if(res2.meta.status !== 200)return showMsg('订单预支付失败！')
   // 1.3 得到服务器响应的“订单编号”
   const payInfo = res2.message.pay
   // 3. 发起微信支付
@@ -103,7 +117,7 @@ const payOrder=async ()=>{
       // 3.1 调用 uni.requestPayment() 发起微信支付
       const res3:any = await uni.requestPayment(payInfo)
       // 3.3 完成了支付，进一步查询支付的结果
-      const res4:any= await myHttp.post('/my/orders/chkOrder', { order_number: orderNumber })
+      const res4:any = await myHttp.post('/my/orders/chkOrder', { order_number: orderNumber })
       // 3.4 检测到订单未支付
       if (res4.meta.status !== 200) return showMsg('订单未支付！')
       // 3.5 检测到订单支付完成

@@ -1,28 +1,59 @@
 <template>
-	<view class="uni-combox" :class="border ? '' : 'uni-combox__no-border'">
-		<view v-if="label" class="uni-combox__label" :style="labelStyle">
-			<text>{{label}}</text>
-		</view>
-		<view class="uni-combox__input-box">
-			<input class="uni-combox__input" type="text" :placeholder="placeholder" 
-			placeholder-class="uni-combox__input-plac" v-model="inputVal" @input="onInput" @focus="onFocus" 
-@blur="onBlur" />
-			<uni-icons :type="showSelector? 'top' : 'bottom'" size="14" color="#999" @click="toggleSelector">
-			</uni-icons>
-		</view>
-		<view class="uni-combox__selector" v-if="showSelector">
-			<view class="uni-popper__arrow"></view>
-			<scroll-view scroll-y="true" class="uni-combox__selector-scroll">
-				<view class="uni-combox__selector-empty" v-if="filterCandidatesLength === 0">
-					<text>{{emptyTips}}</text>
-				</view>
-				<view class="uni-combox__selector-item" v-for="(item,index) in filterCandidates" :key="index" 
-				@click="onSelectorClick(index)">
-					<text>{{item}}</text>
-				</view>
-			</scroll-view>
-		</view>
-	</view>
+  <view
+    class="uni-combox"
+    :class="border ? '' : 'uni-combox__no-border'"
+  >
+    <view
+      v-if="label"
+      class="uni-combox__label"
+      :style="labelStyle"
+    >
+      <text>{{ label }}</text>
+    </view>
+    <view class="uni-combox__input-box">
+      <input
+        v-model="inputVal"
+        class="uni-combox__input"
+        type="text" 
+        :placeholder="placeholder"
+        placeholder-class="uni-combox__input-plac"
+        @input="onInput"
+        @focus="onFocus" 
+        @blur="onBlur"
+      >
+      <uni-icons
+        :type="showSelector? 'top' : 'bottom'"
+        size="14"
+        color="#999"
+        @click="toggleSelector"
+      />
+    </view>
+    <view
+      v-if="showSelector"
+      class="uni-combox__selector"
+    >
+      <view class="uni-popper__arrow" />
+      <scroll-view
+        scroll-y="true"
+        class="uni-combox__selector-scroll"
+      >
+        <view
+          v-if="filterCandidatesLength === 0"
+          class="uni-combox__selector-empty"
+        >
+          <text>{{ emptyTips }}</text>
+        </view>
+        <view
+          v-for="(item,index) in filterCandidates"
+          :key="index"
+          class="uni-combox__selector-item" 
+          @click="onSelectorClick(index)"
+        >
+          <text>{{ item }}</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -38,8 +69,7 @@
 	 * @property {String} value 组合框的值
 	 */
 	export default {
-		name: 'uniCombox',
-		emits: ['input', 'update:modelValue'],
+		name: 'UniCombox',
 		props: {
 			border: {
 				type: Boolean,
@@ -80,6 +110,7 @@
 			},
 			// #endif
 		},
+		emits: ['input', 'update:modelValue'],
 		data() {
 			return {
 				showSelector: false,
@@ -148,7 +179,7 @@
 	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	.uni-combox {
 		font-size: 14px;
 		border: 1px solid #DCDFE6;

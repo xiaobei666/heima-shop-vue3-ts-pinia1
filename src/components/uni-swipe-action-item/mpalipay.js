@@ -11,7 +11,7 @@ export default {
 	watch: {
 		show(newVal) {
 			if (this.autoClose) return
-			if (newVal && newVal !== 'none' ) {
+			if (newVal && newVal !== 'none') {
 				this.transition = true
 				this.open(newVal)
 			} else {
@@ -44,8 +44,8 @@ export default {
 				clientX
 			} = e.changedTouches[0]
 			// fixed by xxxx 模拟点击事件，解决 ios 13 点击区域错位的问题
-			let diff = Math.abs(this.clientX - clientX)
-			let time = (new Date().getTime()) - this.timestamp
+			const diff = Math.abs(this.clientX - clientX)
+			const time = (new Date().getTime()) - this.timestamp
 			if (diff < 40 && time < 300) {
 				this.$emit('click', {
 					content: item,
@@ -95,8 +95,7 @@ export default {
 				} else {
 					this.close()
 				}
-			} else {
-				if (moveX < 0 && moveX < this.rightWidth) {
+			} else if (moveX < 0 && moveX < this.rightWidth) {
 					const rightX = this.rightWidth + moveX
 					if (rightX < this.threshold) {
 						this.open('right')
@@ -111,8 +110,6 @@ export default {
 						this.close()
 					}
 				}
-
-			}
 
 		},
 
@@ -132,7 +129,7 @@ export default {
 			// TODO 解决 x 值不更新的问题，所以会多触发一次 nextTick ，待优化
 			this.$nextTick(() => {
 				this.x = -this.leftWidth
-				if(this.isopen!=='none'){
+				if(this.isopen !== 'none') {
 					this.$emit('change', 'none')
 				}
 				this.isopen = 'none'
@@ -151,7 +148,7 @@ export default {
 					this.x = -this.rightWidth - this.leftWidth
 				}
 				
-				if(this.isopen!==type){
+				if(this.isopen !== type) {
 					this.$emit('change', type)
 				}
 				this.isopen = type
@@ -160,7 +157,7 @@ export default {
 		},
 		getSlide(x) {},
 		getQuerySelect() {
-			const query = uni.createSelectorQuery().in(this);
+			const query = uni.createSelectorQuery().in(this)
 			query.selectAll('.movable-view--hock').boundingClientRect(data => {
 				this.leftWidth = data[1].width
 				this.rightWidth = data[2].width
@@ -186,7 +183,7 @@ export default {
 					this.transition = true
 					this.open(this.shows)
 				}
-			}).exec();
+			}).exec()
 
 		}
 	}

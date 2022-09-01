@@ -1,25 +1,54 @@
 <template>
   <view>
-    <my-search bg-color="pink" @myClick="gotoSearch()"></my-search>
-    
+    <my-search
+      bg-color="pink"
+      @myClick="gotoSearch()"
+    />
+
     <view class="scroll-view-container">
       <!-- 左侧滑动区域 -->
-      <scroll-view scroll-y :style="{height:height+'px'}">
-        <block  v-for="(item,index) in cateList" :key="index">
-          <view @click="changeActive(index)" :class="['left-scroll-view-item',index==active?'active':''] ">{{item.cat_name}}</view>
+      <scroll-view
+        scroll-y
+        :style="{height:height+'px'}"
+      >
+        <block
+          v-for="(item,index) in cateList"
+          :key="index"
+        >
+          <view
+            :class="['left-scroll-view-item',index==active?'active':''] "
+            @click="changeActive(index)"
+          >
+            {{ item.cat_name }}
+          </view>
         </block>
       </scroll-view>
       <!-- 右侧滑动区域 -->
-      <scroll-view scroll-y :style="{height:height+'px'}" :scroll-top="scrollTop">
-      <!-- 二级 -->
-        <view class="cate-lv2" v-for="item2 in cateList2.data" :key="item2.cat_name">
-          <view class="cate-lv2-title">/{{item2.cat_name}}/</view>
+      <scroll-view
+        scroll-y
+        :style="{height:height+'px'}"
+        :scroll-top="scrollTop"
+      >
+        <!-- 二级 -->
+        <view
+          v-for="item2 in cateList2.data"
+          :key="item2.cat_name"
+          class="cate-lv2"
+        >
+          <view class="cate-lv2-title">
+            /{{ item2.cat_name }}/
+          </view>
           <!-- 三级 -->
           <view class="cate-lv3-list">
-            <view @click="gotoGoodList(item3)" class="cate-lv3-item" v-for="item3 in item2.children" :key="item3.cat_name">
+            <view
+              v-for="item3 in item2.children"
+              :key="item3.cat_name"
+              class="cate-lv3-item"
+              @click="gotoGoodList(item3)"
+            >
               <image :src="item3.cat_icon" />
               <!-- 文本 -->
-              <text>{{item3.cat_name}}</text>
+              <text>{{ item3.cat_name }}</text>
             </view>
           </view>
         </view>
@@ -29,68 +58,69 @@
 </template>
 
 <script lang="ts" setup>
-import { onLoad } from '@dcloudio/uni-app';
-import { ref ,reactive, onBeforeUpdate} from 'vue';
+import { onLoad } from '@dcloudio/uni-app'
+import { onBeforeUpdate,reactive, ref } from 'vue'
+
 import {getCateList} from '@/api/category'
-import { encapsulateData } from '@/utils/hooks';
 import MySearch from '@/components/my-search/index.vue'
+import { encapsulateData } from '@/utils/hooks'
 //导入设置徽标hooks
 import {useSetBadge} from '@/utils/hooks'
 useSetBadge()
 
 //设置高度
-const height=ref<number>(0)
+const height = ref<number>(0)
 //设置分类数据容器
-const cateList=reactive<CateDate['message']>([])
+const cateList = reactive<CateDate['message']>([])
 //设置二级分类
-const cateList2=reactive<{data:Message3[]}>({data:[]})
+const cateList2 = reactive<{data:Message3[]}>({data:[]})
 
 //设置滚动条高度
-const scrollTop=ref(0)
+const scrollTop = ref(0)
 //激活选项
-const active=ref(0)
+const active = ref(0)
 //修改激活方法
-const changeActive=(index:number)=>{
-  active.value=index
+const changeActive = (index:number) => {
+  active.value = index
   //前后设置相同像素没有效果得不一样才行
-  scrollTop.value=scrollTop.value==0?1:0
+  scrollTop.value = scrollTop.value == 0 ? 1 : 0
 }
 //在每次数据更新时调用
-onBeforeUpdate(()=>{
+onBeforeUpdate(() => {
   //下面这段代码放到外面会报错，因为，setup时,还没有请求数据
-  
-  cateList[active.value].children.forEach((v1)=>{
-    if(!v1.children){
-      v1.children=[v1]
+
+  cateList[active.value].children.forEach((v1) => {
+    if(!v1.children) {
+      v1.children = [v1]
     }
-    v1.children.forEach(v2=>{
-      let excludeDomain=v2.cat_icon?.split('.').slice(1)
-      v2.cat_icon='https://api-ugo-web.'+excludeDomain?.join('.')
+    v1.children.forEach(v2 => {
+      const excludeDomain = v2.cat_icon?.split('.').slice(1)
+      v2.cat_icon = 'https://api-ugo-web.' + excludeDomain?.join('.')
     })
-    
+
   })
   //顺便把数据渲染进二级分类
-  cateList2.data=cateList[active.value].children
-  
+  cateList2.data = cateList[active.value].children
+
 })
 
-onLoad(async ()=>{
+onLoad(async () => {
   //获取设备屏幕高度信息
-  height.value=uni.getSystemInfoSync().windowHeight-50
+  height.value = uni.getSystemInfoSync().windowHeight - 50
 
   //获取分类列表的数据
   await encapsulateData(cateList,getCateList)
 })
 
 //点击跳转到三级分类
-const gotoGoodList=(item:Message3)=>{
+const gotoGoodList = (item:Message3) => {
   uni.navigateTo({
     url:'/subpkg/goods_list/index?cid=' + item.cat_id,
   })
 }
 
 //点击跳转到搜索页面
-const gotoSearch=()=>{
+const gotoSearch = () => {
   uni.navigateTo({
     url:'/subpkg/search/index',
   })
@@ -139,7 +169,7 @@ const gotoSearch=()=>{
   .cate-lv3-list{
     display: flex;
     flex-wrap: wrap;
-    
+
     .cate-lv3-item{
       width: 33%;
       display: flex;

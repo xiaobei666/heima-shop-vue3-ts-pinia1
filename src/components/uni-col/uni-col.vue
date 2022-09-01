@@ -1,26 +1,32 @@
 <template>
-	<!-- #ifndef APP-NVUE -->
-	<view :class="['uni-col', sizeClass, pointClassList]" :style="{
-		paddingLeft:`${Number(gutter)}rpx`,
-		paddingRight:`${Number(gutter)}rpx`,
-	}">
-		<slot></slot>
-	</view>
-	<!-- #endif -->
-	<!-- #ifdef APP-NVUE -->
-	<!-- 在nvue上，类名样式不生效，换为style -->
-	<!-- 设置right正值失效，设置 left 负值 -->
-	<view :class="['uni-col']" :style="{
-		paddingLeft:`${Number(gutter)}rpx`,
-		paddingRight:`${Number(gutter)}rpx`,
-		width:`${nvueWidth}rpx`,
-		position:'relative',
-		marginLeft:`${marginLeft}rpx`,
-		left:`${right === 0 ? left : -right}rpx`
-	}">
-		<slot></slot>
-	</view>
-	<!-- #endif -->
+  <!-- #ifndef APP-NVUE -->
+  <view
+    :class="['uni-col', sizeClass, pointClassList]"
+    :style="{
+      paddingLeft:`${Number(gutter)}rpx`,
+      paddingRight:`${Number(gutter)}rpx`,
+    }"
+  >
+    <slot />
+  </view>
+  <!-- #endif -->
+  <!-- #ifdef APP-NVUE -->
+  <!-- 在nvue上，类名样式不生效，换为style -->
+  <!-- 设置right正值失效，设置 left 负值 -->
+  <view
+    :class="['uni-col']"
+    :style="{
+      paddingLeft:`${Number(gutter)}rpx`,
+      paddingRight:`${Number(gutter)}rpx`,
+      width:`${nvueWidth}rpx`,
+      position:'relative',
+      marginLeft:`${marginLeft}rpx`,
+      left:`${right === 0 ? left : -right}rpx`
+    }"
+  >
+    <slot />
+  </view>
+  <!-- #endif -->
 </template>
 
 <script>
@@ -45,11 +51,11 @@
 	 * @property	{xl} type = [Number, Object] ≥1920px 响应式栅格数或者栅格属性对象
 	 * 						@description	Number时表示在此屏幕宽度下，栅格占据的列数。Object时可配置多个描述{span: 4, offset: 4}
 	 */
-	const ComponentClass = 'uni-col';
+	const ComponentClass = 'uni-col'
 
 	// -1 默认值，因为在微信小程序端只给Number会有默认值0
 	export default {
-		name: 'uniCol',
+		name: 'UniCol',
 		// #ifdef MP-WEIXIN
 		options: {
 			virtualHost: true // 在微信小程序中将组件节点渲染为虚拟节点，更加接近Vue组件的表现
@@ -89,12 +95,77 @@
 				left: 0
 			}
 		},
+		computed: {
+			sizeList() {
+				const {
+					span,
+					offset,
+					pull,
+					push
+				} = this
+
+				return {
+					span,
+					offset,
+					pull,
+					push
+				}
+			},
+			// #ifndef APP-NVUE
+			pointClassList() {
+				const classList = [];
+
+				['xs', 'sm', 'md', 'lg', 'xl'].forEach(point => {
+					const props = this[point]
+					if (typeof props === 'number') {
+						classList.push(`${ComponentClass}-${point}-${props}`)
+					} else if (typeof props === 'object' && props) {
+						Object.keys(props).forEach(pointProp => {
+							classList.push(
+								pointProp === 'span' ?
+								`${ComponentClass}-${point}-${props[pointProp]}` :
+								`${ComponentClass}-${point}-${pointProp}-${props[pointProp]}`
+							)
+						})
+					}
+				})
+
+				// 支付宝小程序使用 :class=[ ['a','b'] ]，渲染错误
+				return classList.join(' ')
+			}
+			// #endif
+		},
+		watch: {
+			sizeList: {
+				immediate: true,
+				handler(newVal) {
+					// #ifndef APP-NVUE
+					const classList = []
+					for (const size in newVal) {
+						const curSize = newVal[size]
+						if ((curSize || curSize === 0) && curSize !== -1) {
+							classList.push(
+								size === 'span' ?
+								`${ComponentClass}-${curSize}` :
+								`${ComponentClass}-${size}-${curSize}`
+							)
+						}
+					}
+					// 支付宝小程序使用 :class=[ ['a','b'] ]，渲染错误
+					this.sizeClass = classList.join(' ')
+					// #endif
+					// #ifdef APP-NVUE
+					this.updateNvueWidth(this.parentWidth)
+					// #endif
+				}
+			}
+		},
 		created() {
 			// 字节小程序中，在computed中读取$parent为undefined
-			let parent = this.$parent;
+			let parent = this.$parent
 
 			while (parent && parent.$options.componentName !== 'uniRow') {
-				parent = parent.$parent;
+				parent = parent.$parent
 			}
 
 			this.updateGutter(parent.gutter)
@@ -109,49 +180,9 @@
 			})
 			// #endif
 		},
-		computed: {
-			sizeList() {
-				let {
-					span,
-					offset,
-					pull,
-					push
-				} = this;
-
-				return {
-					span,
-					offset,
-					pull,
-					push
-				}
-			},
-			// #ifndef APP-NVUE
-			pointClassList() {
-				let classList = [];
-
-				['xs', 'sm', 'md', 'lg', 'xl'].forEach(point => {
-					const props = this[point];
-					if (typeof props === 'number') {
-						classList.push(`${ComponentClass}-${point}-${props}`)
-					} else if (typeof props === 'object' && props) {
-						Object.keys(props).forEach(pointProp => {
-							classList.push(
-								pointProp === 'span' ?
-								`${ComponentClass}-${point}-${props[pointProp]}` :
-								`${ComponentClass}-${point}-${pointProp}-${props[pointProp]}`
-							)
-						})
-					}
-				});
-
-				// 支付宝小程序使用 :class=[ ['a','b'] ]，渲染错误
-				return classList.join(' ');
-			}
-			// #endif
-		},
 		methods: {
 			updateGutter(parentGutter) {
-				parentGutter = Number(parentGutter);
+				parentGutter = Number(parentGutter)
 				if (!isNaN(parentGutter)) {
 					this.gutter = parentGutter / 2
 				}
@@ -161,58 +192,33 @@
 				// 用于在nvue端，span，offset，pull，push的计算
 				this.parentWidth = width;
 				['span', 'offset', 'pull', 'push'].forEach(size => {
-					const curSize = this[size];
+					const curSize = this[size]
 					if ((curSize || curSize === 0) && curSize !== -1) {
 						let RPX = 1 / 24 * curSize * width
-						RPX = Number(RPX);
+						RPX = Number(RPX)
 						switch (size) {
 							case 'span':
 								this.nvueWidth = RPX
-								break;
+								break
 							case 'offset':
 								this.marginLeft = RPX
-								break;
+								break
 							case 'pull':
 								this.right = RPX
-								break;
+								break
 							case 'push':
 								this.left = RPX
-								break;
+								break
 						}
 					}
-				});
+				})
 			}
 			// #endif
-		},
-		watch: {
-			sizeList: {
-				immediate: true,
-				handler(newVal) {
-					// #ifndef APP-NVUE
-					let classList = [];
-					for (let size in newVal) {
-						const curSize = newVal[size];
-						if ((curSize || curSize === 0) && curSize !== -1) {
-							classList.push(
-								size === 'span' ?
-								`${ComponentClass}-${curSize}` :
-								`${ComponentClass}-${size}-${curSize}`
-							)
-						}
-					}
-					// 支付宝小程序使用 :class=[ ['a','b'] ]，渲染错误
-					this.sizeClass = classList.join(' ');
-					// #endif
-					// #ifdef APP-NVUE
-					this.updateNvueWidth(this.parentWidth);
-					// #endif
-				}
-			}
 		}
 	}
 </script>
 
-<style lang='scss' >
+<style lang='scss'>
 	/* breakpoints */
 	$--sm: 768px !default;
 	$--md: 992px !default;

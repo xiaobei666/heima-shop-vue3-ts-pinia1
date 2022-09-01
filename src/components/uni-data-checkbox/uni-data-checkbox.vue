@@ -1,42 +1,115 @@
 <template>
-	<view class="uni-data-checklist" :style="{'margin-top':isTop+'px'}">
-		<template v-if="!isLocal">
-			<view class="uni-data-loading">
-				<uni-load-more v-if="!mixinDatacomErrorMessage" status="loading" iconType="snow" :iconSize="18" :content-text="contentText"></uni-load-more>
-				<text v-else>{{mixinDatacomErrorMessage}}</text>
-			</view>
-		</template>
-		<template v-else>
-			<checkbox-group v-if="multiple" class="checklist-group" :class="{'is-list':mode==='list' || wrap}" @change="chagne">
-				<label class="checklist-box" :class="['is--'+mode,item.selected?'is-checked':'',(disabled || !!item.disabled)?'is-disable':'',index!==0&&mode==='list'?'is-list-border':'']"
-				 :style="item.styleBackgroud" v-for="(item,index) in dataList" :key="index">
-					<checkbox class="hidden" hidden :disabled="disabled || !!item.disabled" :value="item[map.value]+''" :checked="item.selected" />
-					<view v-if="(mode !=='tag' && mode !== 'list') || ( mode === 'list' && icon === 'left')" class="checkbox__inner"  :style="item.styleIcon">
-						<view class="checkbox__inner-icon"></view>
-					</view>
-					<view class="checklist-content" :class="{'list-content':mode === 'list' && icon ==='left'}">
-						<text class="checklist-text" :style="item.styleIconText">{{item[map.text]}}</text>
-						<view v-if="mode === 'list' && icon === 'right'" class="checkobx__list" :style="item.styleBackgroud"></view>
-					</view>
-				</label>
-			</checkbox-group>
-			<radio-group v-else class="checklist-group" :class="{'is-list':mode==='list','is-wrap':wrap}" @change="chagne">
-				<!-- -->
-				<label class="checklist-box" :class="['is--'+mode,item.selected?'is-checked':'',(disabled || !!item.disabled)?'is-disable':'',index!==0&&mode==='list'?'is-list-border':'']"
-				 :style="item.styleBackgroud" v-for="(item,index) in dataList" :key="index">
-					<radio class="hidden" hidden :disabled="disabled || item.disabled" :value="item[map.value]+''" :checked="item.selected" />
-					<view v-if="(mode !=='tag' && mode !== 'list') || ( mode === 'list' && icon === 'left')" class="radio__inner"
-					 :style="item.styleBackgroud">
-						<view class="radio__inner-icon" :style="item.styleIcon"></view>
-					</view>
-					<view class="checklist-content" :class="{'list-content':mode === 'list' && icon ==='left'}">
-						<text class="checklist-text" :style="item.styleIconText">{{item[map.text]}}</text>
-						<view v-if="mode === 'list' && icon === 'right'" :style="item.styleRightIcon" class="checkobx__list"></view>
-					</view>
-				</label>
-			</radio-group>
-		</template>
-	</view>
+  <view
+    class="uni-data-checklist"
+    :style="{'margin-top':isTop+'px'}"
+  >
+    <template v-if="!isLocal">
+      <view class="uni-data-loading">
+        <uni-load-more
+          v-if="!mixinDatacomErrorMessage"
+          status="loading"
+          icon-type="snow"
+          :icon-size="18"
+          :content-text="contentText"
+        />
+        <text v-else>
+          {{ mixinDatacomErrorMessage }}
+        </text>
+      </view>
+    </template>
+    <template v-else>
+      <checkbox-group
+        v-if="multiple"
+        class="checklist-group"
+        :class="{'is-list':mode==='list' || wrap}"
+        @change="chagne"
+      >
+        <label
+          v-for="(item,index) in dataList"
+          :key="index"
+          class="checklist-box"
+          :class="['is--'+mode,item.selected?'is-checked':'',(disabled || !!item.disabled)?'is-disable':'',index!==0&&mode==='list'?'is-list-border':'']"
+          :style="item.styleBackgroud"
+        >
+          <checkbox
+            class="hidden"
+            hidden
+            :disabled="disabled || !!item.disabled"
+            :value="item[map.value]+''"
+            :checked="item.selected"
+          />
+          <view
+            v-if="(mode !=='tag' && mode !== 'list') || ( mode === 'list' && icon === 'left')"
+            class="checkbox__inner"
+            :style="item.styleIcon"
+          >
+            <view class="checkbox__inner-icon" />
+          </view>
+          <view
+            class="checklist-content"
+            :class="{'list-content':mode === 'list' && icon ==='left'}"
+          >
+            <text
+              class="checklist-text"
+              :style="item.styleIconText"
+            >{{ item[map.text] }}</text>
+            <view
+              v-if="mode === 'list' && icon === 'right'"
+              class="checkobx__list"
+              :style="item.styleBackgroud"
+            />
+          </view>
+        </label>
+      </checkbox-group>
+      <radio-group
+        v-else
+        class="checklist-group"
+        :class="{'is-list':mode==='list','is-wrap':wrap}"
+        @change="chagne"
+      >
+        <!-- -->
+        <label
+          v-for="(item,index) in dataList"
+          :key="index"
+          class="checklist-box"
+          :class="['is--'+mode,item.selected?'is-checked':'',(disabled || !!item.disabled)?'is-disable':'',index!==0&&mode==='list'?'is-list-border':'']"
+          :style="item.styleBackgroud"
+        >
+          <radio
+            class="hidden"
+            hidden
+            :disabled="disabled || item.disabled"
+            :value="item[map.value]+''"
+            :checked="item.selected"
+          />
+          <view
+            v-if="(mode !=='tag' && mode !== 'list') || ( mode === 'list' && icon === 'left')"
+            class="radio__inner"
+            :style="item.styleBackgroud"
+          >
+            <view
+              class="radio__inner-icon"
+              :style="item.styleIcon"
+            />
+          </view>
+          <view
+            class="checklist-content"
+            :class="{'list-content':mode === 'list' && icon ==='left'}"
+          >
+            <text
+              class="checklist-text"
+              :style="item.styleIconText"
+            >{{ item[map.text] }}</text>
+            <view
+              v-if="mode === 'list' && icon === 'right'"
+              :style="item.styleRightIcon"
+              class="checkobx__list"
+            />
+          </view>
+        </label>
+      </radio-group>
+    </template>
+  </view>
 </template>
 
 <script>
@@ -66,9 +139,8 @@
 	 */
 
 	export default {
-		name: 'uniDataChecklist',
+		name: 'UniDataChecklist',
 		mixins: [uniCloud.mixinDatacom || {}],
-		emits:['input','update:modelValue','change'],
 		props: {
 			mode: {
 				type: String,
@@ -89,7 +161,7 @@
 			modelValue: {
 				type: [Array, String, Number],
 				default() {
-					return '';
+					return ''
 				}
 			},
 			localdata: {
@@ -132,12 +204,37 @@
 			},
 			map:{
 				type: Object,
-				default(){
+				default() {
 					return {
 						text:'text',
 						value:'value'
 					}
 				}
+			}
+		},
+		emits:['input','update:modelValue','change'],
+		data() {
+			return {
+				dataList: [],
+				range: [],
+				contentText: {
+					contentdown: '查看更多',
+					contentrefresh: '加载中',
+					contentnomore: '没有更多'
+				},
+				isLocal:true,
+				styles: {
+					selectedColor: '#2979ff',
+					selectedTextColor: '#666',
+				},
+				isTop:0
+			}
+		},
+		computed:{
+			dataValue() {
+				if(this.value === '')return this.modelValue
+				if(this.modelValue === '') return this.value
+				return this.value
 			}
 		},
 		watch: {
@@ -155,41 +252,17 @@
 			value(newVal) {
 				this.dataList = this.getDataList(newVal)
 				// fix by mehaotian is_reset 在 uni-forms 中定义
-				if(!this.is_reset){
+				if(!this.is_reset) {
 					this.is_reset = false
 					this.formItem && this.formItem.setValue(newVal)
 				}
 			},
 			modelValue(newVal) {
-				this.dataList = this.getDataList(newVal);
-				if(!this.is_reset){
+				this.dataList = this.getDataList(newVal)
+				if(!this.is_reset) {
 					this.is_reset = false
 					this.formItem && this.formItem.setValue(newVal)
 				}
-			}
-		},
-		data() {
-			return {
-				dataList: [],
-				range: [],
-				contentText: {
-					contentdown: '查看更多',
-					contentrefresh: '加载中',
-					contentnomore: '没有更多'
-				},
-				isLocal:true,
-				styles: {
-					selectedColor: '#2979ff',
-					selectedTextColor: '#666',
-				},
-				isTop:0
-			};
-		},
-		computed:{
-			dataValue(){
-				if(this.value === '')return this.modelValue
-				if(this.modelValue === '') return this.value
-				return this.value
 			}
 		},
 		created() {
@@ -201,7 +274,7 @@
 				this.isTop = 6
 				if (this.formItem.name) {
 					// 如果存在name添加默认值,否则formData 中不存在这个字段不校验
-					if(!this.is_reset){
+					if(!this.is_reset) {
 						this.is_reset = false
 						this.formItem.setValue(this.dataValue)
 					}
@@ -214,24 +287,22 @@
 				this.isLocal = true
 				this.range = this.localdata
 				this.dataList = this.getDataList(this.getSelectedValue(this.range))
-			} else {
-				if (this.collection) {
+			} else if (this.collection) {
 					this.isLocal = false
 					this.loadData()
 				}
-			}
 		},
 		methods: {
 			loadData() {
-				this.mixinDatacomGet().then(res=>{
+				this.mixinDatacomGet().then(res => {
 					this.mixinDatacomResData = res.result.data
-					if(this.mixinDatacomResData.length === 0){
+					if(this.mixinDatacomResData.length === 0) {
 						this.isLocal = false
 						this.mixinDatacomErrorMessage = this.emptyText
 					}else{
 						this.isLocal = true
 					}
-				}).catch(err=>{
+				}).catch(err => {
 					this.mixinDatacomErrorMessage = err.message
 				})
 			},
@@ -239,14 +310,14 @@
 			 * 获取父元素实例
 			 */
 			getForm(name = 'uniForms') {
-				let parent = this.$parent;
-				let parentName = parent.$options.name;
+				let parent = this.$parent
+				let parentName = parent.$options.name
 				while (parentName !== name) {
-					parent = parent.$parent;
+					parent = parent.$parent
 					if (!parent) return false
-					parentName = parent.$options.name;
+					parentName = parent.$options.name
 				}
-				return parent;
+				return parent
 			},
 			chagne(e) {
 				const values = e.detail.value
@@ -275,9 +346,9 @@
 				}
 				this.formItem && this.formItem.setValue(detail.value)
 				// TODO 兼容 vue2
-				this.$emit('input', detail.value);
+				this.$emit('input', detail.value)
 				// // TOTO 兼容 vue3
-				this.$emit('update:modelValue', detail.value);
+				this.$emit('update:modelValue', detail.value)
 				this.$emit('change', {
 					detail
 				})
@@ -297,8 +368,8 @@
 			 */
 			getDataList(value) {
 				// 解除引用关系，破坏原引用关系，避免污染源数据
-				let dataList = JSON.parse(JSON.stringify(this.range))
-				let list = []
+				const dataList = JSON.parse(JSON.stringify(this.range))
+				const list = []
 				if (this.multiple) {
 					if (!Array.isArray(value)) {
 						value = []
@@ -308,7 +379,7 @@
 					item.disabled = item.disable || item.disabled || false
 					if (this.multiple) {
 						if (value.length > 0) {
-							let have = value.find(val => val === item[this.map.value])
+							const have = value.find(val => val === item[this.map.value])
 							item.selected = have !== undefined
 						} else {
 							item.selected = false
@@ -326,20 +397,20 @@
 			 * @param {Object} list
 			 */
 			setRange(list) {
-				let selectList = list.filter(item => item.selected)
-				let min = Number(this.min) || 0
-				let max = Number(this.max) || ''
+				const selectList = list.filter(item => item.selected)
+				const min = Number(this.min) || 0
+				const max = Number(this.max) || ''
 				list.forEach((item, index) => {
 					if (this.multiple) {
 						if (selectList.length <= min) {
-							let have = selectList.find(val => val[this.map.value] === item[this.map.value])
+							const have = selectList.find(val => val[this.map.value] === item[this.map.value])
 							if (have !== undefined) {
 								item.disabled = true
 							}
 						}
 
 						if (selectList.length >= max && max !== '') {
-							let have = selectList.find(val => val[this.map.value] === item[this.map.value])
+							const have = selectList.find(val => val[this.map.value] === item[this.map.value])
 							if (have === undefined) {
 								item.disabled = true
 							}
@@ -369,7 +440,7 @@
 			 */
 			getSelectedValue(range) {
 				if (!this.multiple) return this.dataValue
-				let selectedArr = []
+				const selectedArr = []
 				range.forEach((item) => {
 					if (item.selected) {
 						selectedArr.push(item[this.map.value])
@@ -382,62 +453,62 @@
 			 * 设置背景样式
 			 */
 			setStyleBackgroud(item) {
-				let styles = {}
-				let selectedColor = this.selectedColor?this.selectedColor:'#2979ff'
+				const styles = {}
+				const selectedColor = this.selectedColor ? this.selectedColor : '#2979ff'
 				if (this.mode !== 'list') {
-					styles['border-color'] = item.selected?selectedColor:'#DCDFE6'
+					styles['border-color'] = item.selected ? selectedColor : '#DCDFE6'
 				}
 				if (this.mode === 'tag') {
-					styles['background-color'] = item.selected? selectedColor:'#f5f5f5'
+					styles['background-color'] = item.selected ? selectedColor : '#f5f5f5'
 				}
 				let classles = ''
-				for (let i in styles) {
+				for (const i in styles) {
 					classles += `${i}:${styles[i]};`
 				}
 				return classles
 			},
 			setStyleIcon(item) {
-				let styles = {}
+				const styles = {}
 				let classles = ''
-				let selectedColor = this.selectedColor?this.selectedColor:'#2979ff'
-				styles['background-color'] = item.selected?selectedColor:'#fff'
-				styles['border-color'] = item.selected?selectedColor:'#DCDFE6'
+				const selectedColor = this.selectedColor ? this.selectedColor : '#2979ff'
+				styles['background-color'] = item.selected ? selectedColor : '#fff'
+				styles['border-color'] = item.selected ? selectedColor : '#DCDFE6'
 
-				if(!item.selected && item.disabled){
+				if(!item.selected && item.disabled) {
 					styles['background-color'] = '#F2F6FC'
-					styles['border-color'] = item.selected?selectedColor:'#DCDFE6'
+					styles['border-color'] = item.selected ? selectedColor : '#DCDFE6'
 				}
 
-				for (let i in styles) {
+				for (const i in styles) {
 					classles += `${i}:${styles[i]};`
 				}
 				return classles
 			},
 			setStyleIconText(item) {
-				let styles = {}
+				const styles = {}
 				let classles = ''
-				let selectedColor = this.selectedColor?this.selectedColor:'#2979ff'
+				const selectedColor = this.selectedColor ? this.selectedColor : '#2979ff'
 				if (this.mode === 'tag') {
-					styles.color = item.selected?(this.selectedTextColor?this.selectedTextColor:'#fff'):'#666'
+					styles.color = item.selected ? (this.selectedTextColor ? this.selectedTextColor : '#fff') : '#666'
 				} else {
-					styles.color = item.selected?(this.selectedTextColor?this.selectedTextColor:selectedColor):'#666'
+					styles.color = item.selected ? (this.selectedTextColor ? this.selectedTextColor : selectedColor) : '#666'
 				}
-				if(!item.selected && item.disabled){
+				if(!item.selected && item.disabled) {
 					styles.color = '#999'
 				}
 
-				for (let i in styles) {
+				for (const i in styles) {
 					classles += `${i}:${styles[i]};`
 				}
 				return classles
 			},
 			setStyleRightIcon(item) {
-				let styles = {}
+				const styles = {}
 				let classles = ''
 				if (this.mode === 'list') {
-					styles['border-color'] = item.selected?this.styles.selectedColor:'#DCDFE6'
+					styles['border-color'] = item.selected ? this.styles.selectedColor : '#DCDFE6'
 				}
-				for (let i in styles) {
+				for (const i in styles) {
 					classles += `${i}:${styles[i]};`
 				}
 

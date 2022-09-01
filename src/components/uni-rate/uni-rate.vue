@@ -1,30 +1,59 @@
 <template>
-	<view>
-		<view ref="uni-rate" class="uni-rate">
-			<view class="uni-rate__icon" :class="{'uni-cursor-not-allowed': disabled}"
-				:style="{ 'margin-right': marginNumber + 'px' }" v-for="(star, index) in stars" :key="index"
-				@touchstart.stop="touchstart" @touchmove.stop="touchmove" @mousedown.stop="mousedown"
-				@mousemove.stop="mousemove" @mouseleave="mouseleave">
-				<uni-icons :color="color" :size="size" :type="isFill ? 'star-filled' : 'star'" />
-				<!-- #ifdef APP-NVUE -->
-				<view :style="{ width: star.activeWitch.replace('%','')*size/100+'px'}" class="uni-rate__icon-on">
-					<uni-icons style="text-align: left;" :color="disabled?'#ccc':activeColor" :size="size"
-						type="star-filled" />
-				</view>
-				<!-- #endif -->
-				<!-- #ifndef APP-NVUE -->
-				<view :style="{ width: star.activeWitch}" class="uni-rate__icon-on">
-					<uni-icons :color="disabled?disabledColor:activeColor" :size="size" type="star-filled" />
-				</view>
-				<!-- #endif -->
-			</view>
-		</view>
-	</view>
+  <view>
+    <view
+      ref="uni-rate"
+      class="uni-rate"
+    >
+      <view
+        v-for="(star, index) in stars"
+        :key="index"
+        class="uni-rate__icon"
+        :class="{'uni-cursor-not-allowed': disabled}"
+        :style="{ 'margin-right': marginNumber + 'px' }"
+        @touchstart.stop="touchstart"
+        @touchmove.stop="touchmove"
+        @mousedown.stop="mousedown"
+        @mousemove.stop="mousemove"
+        @mouseleave="mouseleave"
+      >
+        <uni-icons
+          :color="color"
+          :size="size"
+          :type="isFill ? 'star-filled' : 'star'"
+        />
+        <!-- #ifdef APP-NVUE -->
+        <view
+          :style="{ width: star.activeWitch.replace('%','')*size/100+'px'}"
+          class="uni-rate__icon-on"
+        >
+          <uni-icons
+            style="text-align: left;"
+            :color="disabled?'#ccc':activeColor"
+            :size="size"
+            type="star-filled"
+          />
+        </view>
+        <!-- #endif -->
+        <!-- #ifndef APP-NVUE -->
+        <view
+          :style="{ width: star.activeWitch}"
+          class="uni-rate__icon-on"
+        >
+          <uni-icons
+            :color="disabled?disabledColor:activeColor"
+            :size="size"
+            type="star-filled"
+          />
+        </view>
+        <!-- #endif -->
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>
 	// #ifdef APP-NVUE
-	const dom = uni.requireNativePlugin('dom');
+	const dom = uni.requireNativePlugin('dom')
 	// #endif
 	/**
 	 * Rate 评分
@@ -120,46 +149,46 @@
 				userMouseFristMove: true,
 				userRated: false,
 				userLastRate: 1
-			};
-		},
-		watch: {
-			value(newVal) {
-				this.valueSync = Number(newVal);
-			},
-			modelValue(newVal) {
-				this.valueSync = Number(newVal);
-			},
+			}
 		},
 		computed: {
 			stars() {
-				const value = this.valueSync ? this.valueSync : 0;
-				const starList = [];
-				const floorValue = Math.floor(value);
-				const ceilValue = Math.ceil(value);
+				const value = this.valueSync ? this.valueSync : 0
+				const starList = []
+				const floorValue = Math.floor(value)
+				const ceilValue = Math.ceil(value)
 				for (let i = 0; i < this.max; i++) {
 					if (floorValue > i) {
 						starList.push({
 							activeWitch: "100%"
-						});
+						})
 					} else if (ceilValue - 1 === i) {
 						starList.push({
 							activeWitch: (value - floorValue) * 100 + "%"
-						});
+						})
 					} else {
 						starList.push({
 							activeWitch: "0"
-						});
+						})
 					}
 				}
-				return starList;
+				return starList
 			},
 
 			marginNumber() {
 				return Number(this.margin)
 			}
 		},
+		watch: {
+			value(newVal) {
+				this.valueSync = Number(newVal)
+			},
+			modelValue(newVal) {
+				this.valueSync = Number(newVal)
+			},
+		},
 		created() {
-			this.valueSync = Number(this.value || this.modelValue);
+			this.valueSync = Number(this.value || this.modelValue)
 			this._rateBoxLeft = 0
 			this._oldValue = null
 		},
@@ -217,7 +246,7 @@
 				if (!this.IsPC()) return
 				if (this.userRated) return
 				if (this.userMouseFristMove) {
-					console.log('---mousemove----', this.valueSync);
+					console.log('---mousemove----', this.valueSync)
 					this.userLastRate = this.valueSync
 					this.userMouseFristMove = false
 				}
@@ -241,16 +270,16 @@
 			},
 			// #ifdef H5
 			IsPC() {
-				var userAgentInfo = navigator.userAgent;
-				var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
-				var flag = true;
+				const userAgentInfo = navigator.userAgent
+				const Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"]
+				let flag = true
 				for (let v = 0; v < Agents.length - 1; v++) {
 					if (userAgentInfo.indexOf(Agents[v]) > 0) {
-						flag = false;
-						break;
+						flag = false
+						break
 					}
 				}
-				return flag;
+				return flag
 			},
 			// #endif
 
@@ -265,12 +294,12 @@
 				}
 				const rateMoveRange = clientX - this._rateBoxLeft
 				let index = parseInt(rateMoveRange / (size + this.marginNumber))
-				index = index < 0 ? 0 : index;
-				index = index > this.max ? this.max : index;
-				const range = parseInt(rateMoveRange - (size + this.marginNumber) * index);
-				let value = 0;
-				if (this._oldValue === index && !this.PC) return;
-				this._oldValue = index;
+				index = index < 0 ? 0 : index
+				index = index > this.max ? this.max : index
+				const range = parseInt(rateMoveRange - (size + this.marginNumber) * index)
+				let value = 0
+				if (this._oldValue === index && !this.PC) return
+				this._oldValue = index
 				if (this.allowHalf) {
 					if (range > (size / 2)) {
 						value = index + 1
@@ -291,11 +320,11 @@
 			 */
 			_onChange() {
 
-				this.$emit("input", this.valueSync);
-				this.$emit("update:modelValue", this.valueSync);
+				this.$emit("input", this.valueSync)
+				this.$emit("update:modelValue", this.valueSync)
 				this.$emit("change", {
 					value: this.valueSync
-				});
+				})
 			},
 			/**
 			 * 获取星星距离屏幕左侧距离
@@ -322,7 +351,7 @@
 				// #endif
 			}
 		}
-	};
+	}
 </script>
 
 <style lang="scss">

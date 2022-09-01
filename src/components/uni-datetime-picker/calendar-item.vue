@@ -1,23 +1,36 @@
 <template>
-	<view class="uni-calendar-item__weeks-box" :class="{
-		'uni-calendar-item--disable':weeks.disable,
-		'uni-calendar-item--before-checked-x':weeks.beforeMultiple,
-		'uni-calendar-item--multiple': weeks.multiple,
-		'uni-calendar-item--after-checked-x':weeks.afterMultiple,
-		}" @click="choiceDate(weeks)" @mouseenter="handleMousemove(weeks)">
-		<view class="uni-calendar-item__weeks-box-item" :class="{
-				'uni-calendar-item--checked':calendar.fullDate === weeks.fullDate && (calendar.userChecked || !checkHover),
-				'uni-calendar-item--checked-range-text': checkHover,
-				'uni-calendar-item--before-checked':weeks.beforeMultiple,
-				'uni-calendar-item--multiple': weeks.multiple,
-				'uni-calendar-item--after-checked':weeks.afterMultiple,
-				'uni-calendar-item--disable':weeks.disable,
-				}">
-			<text v-if="selected&&weeks.extraInfo" class="uni-calendar-item__weeks-box-circle"></text>
-			<text class="uni-calendar-item__weeks-box-text uni-calendar-item__weeks-box-text-disable uni-calendar-item--checked-text">{{weeks.date}}</text>
-		</view>
-		<view :class="{'uni-calendar-item--isDay': weeks.isDay}"></view>
-	</view>
+  <view
+    class="uni-calendar-item__weeks-box"
+    :class="{
+      'uni-calendar-item--disable':weeks.disable,
+      'uni-calendar-item--before-checked-x':weeks.beforeMultiple,
+      'uni-calendar-item--multiple': weeks.multiple,
+      'uni-calendar-item--after-checked-x':weeks.afterMultiple,
+    }"
+    @click="choiceDate(weeks)"
+    @mouseenter="handleMousemove(weeks)"
+  >
+    <view
+      class="uni-calendar-item__weeks-box-item"
+      :class="{
+        'uni-calendar-item--checked':calendar.fullDate === weeks.fullDate && (calendar.userChecked || !checkHover),
+        'uni-calendar-item--checked-range-text': checkHover,
+        'uni-calendar-item--before-checked':weeks.beforeMultiple,
+        'uni-calendar-item--multiple': weeks.multiple,
+        'uni-calendar-item--after-checked':weeks.afterMultiple,
+        'uni-calendar-item--disable':weeks.disable,
+      }"
+    >
+      <text
+        v-if="selected&&weeks.extraInfo"
+        class="uni-calendar-item__weeks-box-circle"
+      />
+      <text class="uni-calendar-item__weeks-box-text uni-calendar-item__weeks-box-text-disable uni-calendar-item--checked-text">
+        {{ weeks.date }}
+      </text>
+    </view>
+    <view :class="{'uni-calendar-item--isDay': weeks.isDay}" />
+  </view>
 </template>
 
 <script>
@@ -61,7 +74,7 @@
 	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	.uni-calendar-item__weeks-box {
 		flex: 1;
 		/* #ifndef APP-NVUE */

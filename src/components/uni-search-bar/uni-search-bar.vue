@@ -1,32 +1,68 @@
 <template>
-	<view class="uni-searchbar">
-		<view :style="{borderRadius:radius+'px',backgroundColor: bgColor}" class="uni-searchbar__box"
-			@click="searchClick">
-			<view class="uni-searchbar__box-icon-search">
-				<slot name="searchIcon">
-					<uni-icons color="#c0c4cc" size="18" type="search" />
-				</slot>
-			</view>
-			<input v-if="show || searchVal" :focus="showSync" :disabled="readonly" :placeholder="placeholderText" :maxlength="maxlength"
-				class="uni-searchbar__box-search-input" confirm-type="search" type="text" v-model="searchVal"
-				@confirm="confirm" @blur="blur" @focus="emitFocus" />
-			<text v-else class="uni-searchbar__text-placeholder">{{ placeholder }}</text>
-			<view v-if="show && (clearButton==='always'||clearButton==='auto'&&searchVal!=='') &&!readonly"
-				class="uni-searchbar__box-icon-clear" @click="clear">
-				<slot name="clearIcon">
-					<uni-icons color="#c0c4cc" size="20" type="clear" />
-				</slot>
-			</view>
-		</view>
-		<text @click="cancel" class="uni-searchbar__cancel"
-			v-if="cancelButton ==='always' || show && cancelButton ==='auto'">{{cancelTextI18n}}</text>
-	</view>
+  <view class="uni-searchbar">
+    <view
+      :style="{borderRadius:radius+'px',backgroundColor: bgColor}"
+      class="uni-searchbar__box"
+      @click="searchClick"
+    >
+      <view class="uni-searchbar__box-icon-search">
+        <slot name="searchIcon">
+          <uni-icons
+            color="#c0c4cc"
+            size="18"
+            type="search"
+          />
+        </slot>
+      </view>
+      <input
+        v-if="show || searchVal"
+        v-model="searchVal"
+        :focus="showSync"
+        :disabled="readonly"
+        :placeholder="placeholderText"
+        :maxlength="maxlength"
+        class="uni-searchbar__box-search-input"
+        confirm-type="search"
+        type="text"
+        @confirm="confirm"
+        @blur="blur"
+        @focus="emitFocus"
+      >
+      <text
+        v-else
+        class="uni-searchbar__text-placeholder"
+      >
+        {{ placeholder }}
+      </text>
+      <view
+        v-if="show && (clearButton==='always'||clearButton==='auto'&&searchVal!=='') &&!readonly"
+        class="uni-searchbar__box-icon-clear"
+        @click="clear"
+      >
+        <slot name="clearIcon">
+          <uni-icons
+            color="#c0c4cc"
+            size="20"
+            type="clear"
+          />
+        </slot>
+      </view>
+    </view>
+    <text
+      v-if="cancelButton ==='always' || show && cancelButton ==='auto'"
+      class="uni-searchbar__cancel"
+      @click="cancel"
+    >
+      {{ cancelTextI18n }}
+    </text>
+  </view>
 </template>
 
 <script>
 	import {
 		initVueI18n
 	} from '@dcloudio/uni-i18n'
+
 	import messages from './i18n/index.js'
 	const {
 		t
@@ -60,7 +96,6 @@
 
 	export default {
 		name: "UniSearchBar",
-		emits: ['input', 'update:modelValue', 'clear', 'cancel', 'confirm', 'blur', 'focus'],
 		props: {
 			placeholder: {
 				type: String,
@@ -107,6 +142,7 @@
 				default: false
 			}
 		},
+		emits: ['input', 'update:modelValue', 'clear', 'cancel', 'confirm', 'blur', 'focus'],
 		data() {
 			return {
 				show: false,
@@ -150,7 +186,7 @@
 				handler(newVal) {
 					if (newVal) {
 						if(this.readonly) return
-						this.show = true;
+						this.show = true
 						this.$nextTick(() => {
 							this.showSync = true
 						})
@@ -170,7 +206,7 @@
 				if (this.show) {
 					return
 				}
-				this.show = true;
+				this.show = true
 				this.$nextTick(() => {
 					this.showSync = true
 				})
@@ -185,7 +221,7 @@
 				if(this.readonly) return
 				this.$emit("cancel", {
 					value: this.searchVal
-				});
+				})
 				this.searchVal = ""
 				this.show = false
 				this.showSync = false
@@ -198,7 +234,7 @@
 			},
 			confirm() {
 				// #ifndef APP-PLUS
-				uni.hideKeyboard();
+				uni.hideKeyboard()
 				// #endif
 				// #ifdef APP-PLUS
 				plus.key.hideSoftKeybord()
@@ -209,7 +245,7 @@
 			},
 			blur() {
 				// #ifndef APP-PLUS
-				uni.hideKeyboard();
+				uni.hideKeyboard()
 				// #endif
 				// #ifdef APP-PLUS
 				plus.key.hideSoftKeybord()
@@ -222,7 +258,7 @@
 				this.$emit("focus", e.detail)
 			}
 		}
-	};
+	}
 </script>
 
 <style lang="scss">

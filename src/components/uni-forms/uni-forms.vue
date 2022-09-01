@@ -1,35 +1,40 @@
 <template>
-	<view class="uni-forms" :class="{ 'uni-forms--top': !border }">
-		<form @submit.stop="submitForm" @reset="resetForm">
-			<slot></slot>
-		</form>
-	</view>
+  <view
+    class="uni-forms"
+    :class="{ 'uni-forms--top': !border }"
+  >
+    <form
+      @submit.stop="submitForm"
+      @reset="resetForm"
+    >
+      <slot />
+    </form>
+  </view>
 </template>
 
 <script>
 	// #ifndef VUE3
-	import Vue from 'vue';
+	import Vue from 'vue'
 	Vue.prototype.binddata = function(name, value, formName) {
 		if (formName) {
-			this.$refs[formName].setValue(name, value);
+			this.$refs[formName].setValue(name, value)
 		} else {
-			let formVm;
-			for (let i in this.$refs) {
-				const vm = this.$refs[i];
+			let formVm
+			for (const i in this.$refs) {
+				const vm = this.$refs[i]
 				if (vm && vm.$options && vm.$options.name === 'uniForms') {
-					formVm = vm;
-					break;
+					formVm = vm
+					break
 				}
 			}
-			if (!formVm) return console.error('当前 uni-froms 组件缺少 ref 属性');
-			formVm.setValue(name, value);
+			if (!formVm) return console.error('当前 uni-froms 组件缺少 ref 属性')
+			formVm.setValue(name, value)
 		}
-	};
+	}
 	// #endif
 
 
-
-	import Validator from './validate.js';
+	import Validator from './validate.js'
 	/**
 	 * Forms 表单
 	 * @description 由输入框、选择器、单选框、多选框等控件组成，用以收集、校验、提交数据
@@ -54,29 +59,28 @@
 	 */
 
 	export default {
-		name: 'uniForms',
+		name: 'UniForms',
 		components: {},
-		emits:['input','reset','validate','submit'],
 		props: {
 			// 即将弃用
 			value: {
 				type: Object,
 				default () {
-					return {};
+					return {}
 				}
 			},
 			// 替换 value 属性
 			modelValue: {
 				type: Object,
 				default () {
-					return {};
+					return {}
 				}
 			},
 			// 表单校验规则
 			rules: {
 				type: Object,
 				default () {
-					return {};
+					return {}
 				}
 			},
 			// 校验触发器方式，默认 关闭
@@ -108,24 +112,25 @@
 				default: false
 			}
 		},
+		emits:['input','reset','validate','submit'],
 		data() {
 			return {
 				formData: {}
-			};
+			}
 		},
 		computed: {
 			dataValue() {
 				if (JSON.stringify(this.modelValue) === '{}') {
 					return this.value
-				} else {
+				} 
 					return this.modelValue
-				}
+				
 			}
 		},
 		watch: {
 			rules(newVal) {
 				// 如果规则发生变化，要初始化组件
-				this.init(newVal);
+				this.init(newVal)
 			},
 			labelPosition() {
 				this.childrens.forEach(vm => {
@@ -135,38 +140,38 @@
 		},
 		created() {
 			// #ifdef VUE3
-			let getbinddata = getApp().$vm.$.appContext.config.globalProperties.binddata
+			const getbinddata = getApp().$vm.$.appContext.config.globalProperties.binddata
 			if (!getbinddata) {
 				getApp().$vm.$.appContext.config.globalProperties.binddata = function(name, value, formName) {
 					if (formName) {
-						this.$refs[formName].setValue(name, value);
+						this.$refs[formName].setValue(name, value)
 					} else {
-						let formVm;
-						for (let i in this.$refs) {
-							const vm = this.$refs[i];
+						let formVm
+						for (const i in this.$refs) {
+							const vm = this.$refs[i]
 							if (vm && vm.$options && vm.$options.name === 'uniForms') {
-								formVm = vm;
-								break;
+								formVm = vm
+								break
 							}
 						}
-						if (!formVm) return console.error('当前 uni-froms 组件缺少 ref 属性');
-						formVm.setValue(name, value);
+						if (!formVm) return console.error('当前 uni-froms 组件缺少 ref 属性')
+						formVm.setValue(name, value)
 					}
 				}
 			}
 			// #endif
 
 			// 存放watch 监听数组
-			this.unwatchs = [];
+			this.unwatchs = []
 			// 存放子组件数组
-			this.childrens = [];
+			this.childrens = []
 			// 存放 easyInput 组件
-			this.inputChildrens = [];
+			this.inputChildrens = []
 			// 存放 dataCheckbox 组件
-			this.checkboxChildrens = [];
+			this.checkboxChildrens = []
 			// 存放规则
-			this.formRules = [];
-			this.init(this.rules);
+			this.formRules = []
+			this.init(this.rules)
 		},
 		// mounted() {
 		// 	this.init(this.rules)
@@ -178,46 +183,46 @@
 					try{
 						// TODO 不影响原始数据
 						this.formData = JSON.parse(JSON.stringify(this.dataValue))
-					}catch(e){
+					}catch(e) {
 						//TODO handle the exception
 						this.formData = {}
 					}
 					return
-				};
-				this.formRules = formRules;
-				this.validator = new Validator(formRules);
-				this.registerWatch();
+				}
+				this.formRules = formRules
+				this.validator = new Validator(formRules)
+				this.registerWatch()
 			},
 			// 监听 watch
 			registerWatch() {
 				// 取消监听,避免多次调用 init 重复执行 $watch
-				this.unwatchs.forEach(v => v());
+				this.unwatchs.forEach(v => v())
 				this.childrens.forEach((v) => {
 					v.init()
 				})
 				// watch 每个属性 ，需要知道具体那个属性发变化
 				Object.keys(this.dataValue).forEach(key => {
-					let watch = this.$watch(
+					const watch = this.$watch(
 						'dataValue.' + key,
 						value => {
 							if (!value) return
 							// 如果是对象 ，则平铺内容
 							if (value.toString() === '[object Object]') {
-								for (let i in value) {
-									let name = `${key}[${i}]`;
-									this.formData[name] = this._getValue(name, value[i]);
+								for (const i in value) {
+									const name = `${key}[${i}]`
+									this.formData[name] = this._getValue(name, value[i])
 								}
 							} else {
-								this.formData[key] = this._getValue(key, value);
+								this.formData[key] = this._getValue(key, value)
 							}
 						},
 						{
 							deep: true,
 							immediate: true
 						}
-					);
-					this.unwatchs.push(watch);
-				});
+					)
+					this.unwatchs.push(watch)
+				})
 			},
 			/**
 			 * 公开给用户使用
@@ -225,7 +230,7 @@
 			 * @param {Object} formRules
 			 */
 			setRules(formRules) {
-				this.init(formRules);
+				this.init(formRules)
 			},
 			/**
 			 * 公开给用户使用
@@ -234,12 +239,12 @@
 			 *  @param {String} value 字段值
 			 */
 			setValue(name, value, callback) {
-				let example = this.childrens.find(child => child.name === name);
-				if (!example) return null;
-				value = this._getValue(example.name, value);
-				this.formData[name] = value;
-				example.val = value;
-				return example.triggerCheck(value, callback);
+				const example = this.childrens.find(child => child.name === name)
+				if (!example) return null
+				value = this._getValue(example.name, value)
+				this.formData[name] = value
+				example.val = value
+				return example.triggerCheck(value, callback)
 			},
 
 			/**
@@ -248,24 +253,24 @@
 			 */
 			resetForm(event) {
 				this.childrens.forEach(item => {
-					item.errMsg = '';
-					const inputComp = this.inputChildrens.find(child => child.rename === item.name);
+					item.errMsg = ''
+					const inputComp = this.inputChildrens.find(child => child.rename === item.name)
 					if (inputComp) {
-						inputComp.errMsg = '';
+						inputComp.errMsg = ''
 						// fix by mehaotian 不触发其他组件的 setValue
 						inputComp.is_reset = true
-						inputComp.$emit('input', inputComp.multiple ? [] : '');
-						inputComp.$emit('update:modelValue', inputComp.multiple ? [] : '');
+						inputComp.$emit('input', inputComp.multiple ? [] : '')
+						inputComp.$emit('update:modelValue', inputComp.multiple ? [] : '')
 					}
-				});
+				})
 
 				this.childrens.forEach(item => {
 					if (item.name) {
-						this.formData[item.name] = this._getValue(item.name, '');
+						this.formData[item.name] = this._getValue(item.name, '')
 					}
-				});
+				})
 
-				this.$emit('reset', event);
+				this.$emit('reset', event)
 			},
 
 			/**
@@ -273,15 +278,15 @@
 			 * @param {Object} validate
 			 */
 			validateCheck(validate) {
-				if (validate === null) validate = null;
-				this.$emit('validate', validate);
+				if (validate === null) validate = null
+				this.$emit('validate', validate)
 			},
 			/**
 			 * 校验所有或者部分表单
 			 */
 			async validateAll(invalidFields, type, keepitem, callback) {
-				let childrens = []
-				for (let i in invalidFields) {
+				const childrens = []
+				for (const i in invalidFields) {
 					const item = this.childrens.find(v => v.name === i)
 					if (item) {
 						childrens.push(item)
@@ -289,54 +294,54 @@
 				}
 
 				if (!callback && typeof keepitem === 'function') {
-					callback = keepitem;
+					callback = keepitem
 				}
 
-				let promise;
+				let promise
 				if (!callback && typeof callback !== 'function' && Promise) {
 					promise = new Promise((resolve, reject) => {
 						callback = function(valid, invalidFields) {
-							!valid ? resolve(invalidFields) : reject(valid);
-						};
-					});
+							!valid ? resolve(invalidFields) : reject(valid)
+						}
+					})
 				}
 
-				let results = [];
-				let newFormData = {};
+				let results = []
+				let newFormData = {}
 				if (this.validator) {
-					for (let key in childrens) {
-						const child = childrens[key];
-						let name = child.isArray ? child.arrayField : child.name;
+					for (const key in childrens) {
+						const child = childrens[key]
+						const name = child.isArray ? child.arrayField : child.name
 						if (child.isArray) {
 							if (child.name.indexOf('[') !== -1 && child.name.indexOf(']') !== -1) {
-								const fieldData = child.name.split('[');
-								const fieldName = fieldData[0];
-								const fieldValue = fieldData[1].replace(']', '');
+								const fieldData = child.name.split('[')
+								const fieldName = fieldData[0]
+								const fieldValue = fieldData[1].replace(']', '')
 								if (!newFormData[fieldName]) {
-									newFormData[fieldName] = {};
+									newFormData[fieldName] = {}
 								}
-								newFormData[fieldName][fieldValue] = this._getValue(name, invalidFields[name]);
+								newFormData[fieldName][fieldValue] = this._getValue(name, invalidFields[name])
 							}
 						} else {
-							newFormData[name] = this._getValue(name, invalidFields[name]);
+							newFormData[name] = this._getValue(name, invalidFields[name])
 						}
-						const result = await child.triggerCheck(invalidFields[name], true);
+						const result = await child.triggerCheck(invalidFields[name], true)
 						if (result) {
-							results.push(result);
-							if (this.errShowType === 'toast' || this.errShowType === 'modal') break;
+							results.push(result)
+							if (this.errShowType === 'toast' || this.errShowType === 'modal') break
 						}
 					}
 				} else {
 					newFormData = invalidFields
 				}
 				if (Array.isArray(results)) {
-					if (results.length === 0) results = null;
+					if (results.length === 0) results = null
 				}
 
 				if (Array.isArray(keepitem)) {
 					keepitem.forEach(v => {
-						newFormData[v] = this.dataValue[v];
-					});
+						newFormData[v] = this.dataValue[v]
+					})
 				}
 
 				if (type === 'submit') {
@@ -345,18 +350,18 @@
 							value: newFormData,
 							errors: results
 						}
-					});
+					})
 				} else {
-					this.$emit('validate', results);
+					this.$emit('validate', results)
 				}
 
-				callback && typeof callback === 'function' && callback(results, newFormData);
+				callback && typeof callback === 'function' && callback(results, newFormData)
 
 				if (promise && callback) {
-					return promise;
-				} else {
-					return null;
-				}
+					return promise
+				} 
+					return null
+				
 			},
 			submitForm() {},
 			/**
@@ -365,18 +370,18 @@
 			 * 对整个表单进行校验的方法，参数为一个回调函数。
 			 */
 			submit(keepitem, callback, type) {
-				for (let i in this.dataValue) {
-					const itemData = this.childrens.find(v => v.name === i);
+				for (const i in this.dataValue) {
+					const itemData = this.childrens.find(v => v.name === i)
 					if (itemData) {
 						if (this.formData[i] === undefined) {
-							this.formData[i] = this._getValue(i, this.dataValue[i]);
+							this.formData[i] = this._getValue(i, this.dataValue[i])
 						}
 					}
 				}
 				if (!type) {
-					console.warn('submit 方法即将废弃，请使用validate方法代替！');
+					console.warn('submit 方法即将废弃，请使用validate方法代替！')
 				}
-				return this.validateAll(this.formData, 'submit', keepitem, callback);
+				return this.validateAll(this.formData, 'submit', keepitem, callback)
 			},
 
 			/**
@@ -385,7 +390,7 @@
 			 * 对整个表单进行校验的方法，参数为一个回调函数。
 			 */
 			validate(keepitem, callback) {
-				return this.submit(keepitem, callback, true);
+				return this.submit(keepitem, callback, true)
 			},
 
 			/**
@@ -394,46 +399,44 @@
 			 * @param {Object} cb
 			 */
 			validateField(props, callback) {
-				props = [].concat(props);
-				let invalidFields = {};
+				props = [].concat(props)
+				let invalidFields = {}
 				this.childrens.forEach(item => {
 					if (props.indexOf(item.name) !== -1) {
 						invalidFields = Object.assign({}, invalidFields, {
 							[item.name]: this.formData[item.name]
-						});
+						})
 					}
-				});
-				return this.validateAll(invalidFields, 'submit', [], callback);
+				})
+				return this.validateAll(invalidFields, 'submit', [], callback)
 			},
 
 			/**
 			 * 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
 			 */
 			resetFields() {
-				this.resetForm();
+				this.resetForm()
 			},
 
 			/**
 			 * 移除表单项的校验结果。传入待移除的表单项的 prop 属性或者 prop 组成的数组，如不传则移除整个表单的校验结果
 			 */
 			clearValidate(props) {
-				props = [].concat(props);
+				props = [].concat(props)
 				this.childrens.forEach(item => {
-					const inputComp = this.inputChildrens.find(child => child.rename === item.name);
+					const inputComp = this.inputChildrens.find(child => child.rename === item.name)
 					if (props.length === 0) {
-						item.errMsg = '';
+						item.errMsg = ''
 						if (inputComp) {
-							inputComp.errMsg = '';
+							inputComp.errMsg = ''
 						}
-					} else {
-						if (props.indexOf(item.name) !== -1) {
-							item.errMsg = '';
+					} else if (props.indexOf(item.name) !== -1) {
+							item.errMsg = ''
 							if (inputComp) {
-								inputComp.errMsg = '';
+								inputComp.errMsg = ''
 							}
 						}
-					}
-				});
+				})
 			},
 			/**
 			 * 把 value 转换成指定的类型
@@ -441,31 +444,31 @@
 			 * @param {Object} value
 			 */
 			_getValue(key, value) {
-				const rules = (this.formRules[key] && this.formRules[key].rules) || [];
-				const isRuleNum = rules.find(val => val.format && this.type_filter(val.format));
-				const isRuleBool = rules.find(val => (val.format && val.format === 'boolean') || val.format === 'bool');
+				const rules = (this.formRules[key] && this.formRules[key].rules) || []
+				const isRuleNum = rules.find(val => val.format && this.type_filter(val.format))
+				const isRuleBool = rules.find(val => (val.format && val.format === 'boolean') || val.format === 'bool')
 				// 输入值为 number
 				if (isRuleNum) {
-					value = isNaN(value) ? value : value === '' || value === null ? null : Number(value);
+					value = isNaN(value) ? value : value === '' || value === null ? null : Number(value)
 				}
 				// 简单判断真假值
 				if (isRuleBool) {
-					value = !value ? false : true;
+					value = !value ? false : true
 				}
-				return value;
+				return value
 			},
 			/**
 			 * 过滤数字类型
 			 * @param {Object} format
 			 */
 			type_filter(format) {
-				return format === 'int' || format === 'double' || format === 'number' || format === 'timestamp';
+				return format === 'int' || format === 'double' || format === 'number' || format === 'timestamp'
 			}
 		}
-	};
+	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	.uni-forms {
 		// overflow: hidden;
 		// padding: 10px 15px;

@@ -5,22 +5,22 @@
  * @param immediate true - 立即执行， false - 延迟执行
  */
 export const debounce = function(func, wait = 1000, immediate = true) {
-	let timer;
-	console.log(1);
+	let timer
+	console.log(1)
 	return function() {
-		console.log(123);
-		let context = this,
-			args = arguments;
-		if (timer) clearTimeout(timer);
+		console.log(123)
+		const context = this,
+			args = arguments
+		if (timer) clearTimeout(timer)
 		if (immediate) {
-			let callNow = !timer;
+			const callNow = !timer
 			timer = setTimeout(() => {
-				timer = null;
-			}, wait);
-			if (callNow) func.apply(context, args);
+				timer = null
+			}, wait)
+			if (callNow) func.apply(context, args)
 		} else {
 			timer = setTimeout(() => {
-				func.apply(context, args);
+				func.apply(context, args)
 			}, wait)
 		}
 	}
@@ -32,22 +32,22 @@ export const debounce = function(func, wait = 1000, immediate = true) {
  * @param type 1 使用表时间戳，在时间段开始的时候触发 2 使用表定时器，在时间段结束的时候触发
  */
 export const throttle = (func, wait = 1000, type = 1) => {
-	let previous = 0;
-	let timeout;
+	let previous = 0
+	let timeout
 	return function() {
-		let context = this;
-		let args = arguments;
+		const context = this
+		const args = arguments
 		if (type === 1) {
-			let now = Date.now();
+			const now = Date.now()
 
 			if (now - previous > wait) {
-				func.apply(context, args);
-				previous = now;
+				func.apply(context, args)
+				previous = now
 			}
 		} else if (type === 2) {
 			if (!timeout) {
 				timeout = setTimeout(() => {
-					timeout = null;
+					timeout = null
 					func.apply(context, args)
 				}, wait)
 			}
